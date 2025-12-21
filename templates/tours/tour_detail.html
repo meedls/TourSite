@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ tour.name }} - TravelHub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 100px 0;">
+    <a href="{% url 'tours:tour_create' %}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Назад к турам
+    </a>
+
+    <div style="background: white; border-radius: 10px; padding: 40px; margin-top: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h1>{{ tour.name }}</h1>
+
+        <div style="margin: 20px 0;">
+            <p><strong>Создатель:</strong> {{ tour.user.username }}</p>
+            <p><strong>Даты:</strong> {{ tour.start_date|date:"d.m.Y" }} - {{ tour.end_date|date:"d.m.Y" }}</p>
+            <p><strong>Статус:</strong> {% if tour.is_public %}Публичный{% else %}Приватный{% endif %}</p>
+        </div>
+
+        {% if tour.description %}
+        <div style="margin: 30px 0;">
+            <h3>Описание</h3>
+            <p>{{ tour.description }}</p>
+        </div>
+        {% endif %}
+
+        {% if tour.cities.all %}
+        <div style="margin: 30px 0;">
+            <h3>Города маршрута</h3>
+            <div style="display: grid; gap: 15px;">
+                {% for tour_city in tour.cities.all %}
+                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+                    <h4>{{ tour_city.city.name }}, {{ tour_city.city.country }}</h4>
+                    <p>Прибытие: {{ tour_city.arrival_date|date:"d.m.Y" }}</p>
+                    <p>Отъезд: {{ tour_city.departure_date|date:"d.m.Y" }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if tour.flights.all %}
+        <div style="margin: 30px 0;">
+            <h3>Рейсы</h3>
+            <div style="display: grid; gap: 15px;">
+                {% for tour_flight in tour.flights.all %}
+                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+                    <p><strong>{{ tour_flight.flight.airline.name }}</strong></p>
+                    <p>{{ tour_flight.flight.from_city.name }} → {{ tour_flight.flight.to_city.name }}</p>
+                    <p>{{ tour_flight.flight.departure_time|date:"d.m.Y H:i" }} - {{ tour_flight.flight.arrival_time|date:"H:i" }}</p>
+                    <p>Цена: {{ tour_flight.flight.price }} ₽</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if tour.hotels.all %}
+        <div style="margin: 30px 0;">
+            <h3>Отели</h3>
+            <div style="display: grid; gap: 15px;">
+                {% for tour_hotel in tour.hotels.all %}
+                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+                    <h4>{{ tour_hotel.hotel.name }}</h4>
+                    <p>{{ tour_hotel.hotel.city.name }}</p>
+                    <p>Заезд: {{ tour_hotel.check_in|date:"d.m.Y" }}</p>
+                    <p>Выезд: {{ tour_hotel.check_out|date:"d.m.Y" }}</p>
+                    <p>Цена: {{ tour_hotel.hotel.price_min }} - {{ tour_hotel.hotel.price_max }} ₽</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if tour.places.all %}
+        <div style="margin: 30px 0;">
+            <h3>Достопримечательности</h3>
+            <div style="display: grid; gap: 15px;">
+                {% for tour_place in tour.places.all %}
+                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+                    <h4>{{ tour_place.place.name }}</h4>
+                    <p>{{ tour_place.place.city.name }}</p>
+                    <p>Дата посещения: {{ tour_place.visit_date|date:"d.m.Y" }}
+                    {% if tour_place.visit_time %} в {{ tour_place.visit_time|time:"H:i" }}{% endif %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if tour.participants.all %}
+        <div style="margin: 30px 0;">
+            <h3>Участники</h3>
+            <div style="display: grid; gap: 10px;">
+                {% for participant in tour.participants.all %}
+                <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                    <strong>{{ participant.user.username }}</strong> - {{ participant.get_status_display }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div style="margin-top: 40px;">
+            {% if user.is_authenticated and user == tour.user %}
+                <a href="{% url 'tours:tour_edit' tour.pk %}" class="btn-primary">Редактировать</a>
+                <a href="{% url 'tours:tour_delete' tour.pk %}" class="btn-secondary" style="margin-left: 10px;">Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

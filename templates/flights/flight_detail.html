@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ flight.from_city.name }} - {{ flight.to_city.name }} - TravelHub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/flight.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="header-section">
+        <div class="image-container">
+            <img src="{% static 'images/image 23.png' %}" alt="{{ flight.from_city.name }} - {{ flight.to_city.name }}" class="hotel-image">
+        </div>
+
+        <div class="info-container">
+            <a href="{% url 'flights:flight_list' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Назад
+            </a>
+
+            <h1 class="hotel-title">{{ flight.from_city.name }} - {{ flight.to_city.name }}</h1>
+
+            <div class="rating">
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="rating-value">5.0</div>
+            </div>
+
+            <div class="hotel-description">
+               Ваше путешествие начинается с отдельной стойки регистрации и доступа в комфортабельные лаунжи. На борту вас ждет мир безграничного пространства и персонализированного сервиса.
+            </div>
+
+            <div class="booking-details">
+                <div class="detail-item">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>{{ flight.departure_time|date:"d F" }} · 1 пассажир · {{ flight.get_class_type_display }}</span>
+                </div>
+            </div>
+
+            <div class="price-section">
+                <div class="price">{{ flight.price }} ₽</div>
+                <div class="buttons-container">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'flights:flight_book' flight.pk %}" class="btn-buy">Купить</a>
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="btn-buy">Купить</a>
+                    {% endif %}
+                    <button class="btn-wishlist">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="flight-section">
+        <div class="flight-card">
+            <div class="flight-header">
+                <h2 class="flight-title">Вылет</h2>
+                <div class="flight-details">
+                    <div class="detail-row">
+                        <i class="far fa-calendar-alt calendar-icon"></i>
+                        <span class="detail-text">{{ flight.departure_time|date:"d F, l" }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <i class="far fa-clock time-icon"></i>
+                        <span class="detail-text">{{ flight.duration }} в пути</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flight-route">
+                <div class="airport-btn departure">
+                    <div class="airport-code">{{ flight.from_city.name|slice:":3"|upper }}</div>
+                    <div class="airport-time">{{ flight.departure_time|date:"H:i" }}</div>
+                </div>
+
+                <div class="route-line">
+                    <div class="dashes">----------------------------------------</div>
+                    <div class="plane-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <div class="dashes">----------------------------------------</div>
+                </div>
+
+                <div class="airport-btn arrival">
+                    <div class="airport-code">{{ flight.to_city.name|slice:":3"|upper }}</div>
+                    <div class="airport-time">{{ flight.arrival_time|date:"H:i" }}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tariff-section">
+        <h2 class="tariff-title">Условия тарифа</h2>
+
+        <div class="tariff-conditions">
+            <div class="condition-row">
+                <div class="condition-content">
+                    <div class="condition-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="condition-text">
+                        <span class="condition-main">Ручная кладь: 1 место до 10 кг</span>
+                    </div>
+                </div>
+                <button class="condition-btn">Выбрать</button>
+            </div>
+
+            <div class="condition-row">
+                <div class="condition-content">
+                    <div class="condition-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="condition-text">
+                        <span class="condition-main">Багаж: 1 место до 23 кг</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="condition-row">
+                <div class="condition-content">
+                    <div class="condition-icon unchecked">
+                        <i class="far fa-times-circle"></i>
+                    </div>
+                    <div class="condition-text">
+                        <span class="condition-main">Питание: Не включено</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="condition-row">
+                <div class="condition-content">
+                    <div class="condition-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="condition-text">
+                        <span class="condition-main">Возврат: С комиссией 1500 ₽</span>
+                    </div>
+                </div>
+                <div class="condition-detail">Подробнее</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="important-info-section">
+        <div class="important-info-container">
+            <h2 class="important-info-title">Важная информация</h2>
+
+            <div class="important-info-list">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="info-text">Возможна онлайн-регистрация за 24 часа до вылета</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="info-text">Мобильный посадочный талон доступен в электронной почте</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="info-text">Не забудьте паспорт!</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="total-cost-section">
+        <div class="total-cost-card">
+            <h2 class="total-cost-title">Итоговая стоимость</h2>
+
+            <div class="cost-breakdown">
+                <div class="cost-row">
+                    <div class="cost-label">Билет:</div>
+                    <div class="cost-value">{{ flight.price }} ₽</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-label">Сервисный сбор:</div>
+                    <div class="cost-value">189 ₽</div>
+                </div>
+
+                <div class="insurance-row">
+                    <div class="insurance-left">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="insurance-toggle" checked>
+                            <label for="insurance-toggle" class="toggle-slider"></label>
+                        </div>
+                        <div class="insurance-label">Страхование жизни</div>
+                    </div>
+                    <div class="insurance-price">240 ₽</div>
+                </div>
+
+                <div class="total-row">
+                    <div class="total-label">Итого к оплате:</div>
+                    <div class="total-value" id="total-price">{{ flight.price|add:429 }} ₽</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

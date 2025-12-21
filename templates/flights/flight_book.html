@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Бронирование рейса - TravelHub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/flight.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 100px 0;">
+    <h1>Бронирование рейса</h1>
+
+    <div style="background: white; border-radius: 10px; padding: 30px; margin-top: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h2>{{ flight.from_city.name }} → {{ flight.to_city.name }}</h2>
+
+        <div style="margin: 20px 0;">
+            <p><strong>Авиакомпания:</strong> {{ flight.airline.name }}</p>
+            <p><strong>Вылет:</strong> {{ flight.departure_time|date:"d.m.Y H:i" }}</p>
+            <p><strong>Прилет:</strong> {{ flight.arrival_time|date:"d.m.Y H:i" }}</p>
+            <p><strong>Класс:</strong> {{ flight.get_class_type_display }}</p>
+            <p style="font-size: 24px; color: #2c3e50; margin-top: 20px;">
+                <strong>Стоимость: {{ flight.price }} ₽</strong>
+            </p>
+        </div>
+
+        <form method="post" style="margin-top: 30px;">
+            {% csrf_token %}
+
+            <h3>Данные пассажира</h3>
+
+            <div style="margin: 20px 0;">
+                <label>Фамилия:</label><br>
+                <input type="text" name="last_name" required style="padding: 10px; width: 100%; max-width: 400px;">
+            </div>
+
+            <div style="margin: 20px 0;">
+                <label>Имя:</label><br>
+                <input type="text" name="first_name" required style="padding: 10px; width: 100%; max-width: 400px;">
+            </div>
+
+            <div style="margin: 20px 0;">
+                <label>Email:</label><br>
+                <input type="email" name="email" required style="padding: 10px; width: 100%; max-width: 400px;">
+            </div>
+
+            <div style="margin: 20px 0;">
+                <label>Телефон:</label><br>
+                <input type="tel" name="phone" required style="padding: 10px; width: 100%; max-width: 400px;">
+            </div>
+
+            <div style="margin: 30px 0;">
+                <button type="submit" class="btn-primary" style="padding: 15px 40px; font-size: 18px;">
+                    Забронировать
+                </button>
+                <a href="{% url 'flights:flight_detail' flight.pk %}" style="margin-left: 20px;">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

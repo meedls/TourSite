@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}TravelHub - Создай своё путешествие{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = [
+            {
+            title: 'Санкт-Петербург',
+            price: '60 000 р.',
+            image: "{% static 'images/vid-na-sankt-peterburg-kolonna-aleksandra 1.png' %}",
+            description: 'Белые ночи, разводные мосты и парадные дворцы — классический маршрут по Петербургу с прогулками по Неве и закрытыми залами Эрмитажа.'
+            },
+            {
+                title: 'Камчатка',
+                price: '120 000 р.',
+                image: "{% static 'images/vid-na-sankt-peterburg-kolonna-aleksandra 1.png' %}",
+                description: 'Вулканы, горячие источники и прогулки по побережью. Маршрут для тех, кто хочет увидеть Дальний Восток без компромиссов.'
+            },
+            {
+                title: 'Байкал',
+                price: '85 000 р.',
+                image: "{% static 'images/vid-na-sankt-peterburg-kolonna-aleksandra 1.png' %}",
+                description: 'Ледяные пещеры, шаманские легенды и катание по прозрачному льду. Уютные ночевки в домах на берегу и прогулки на хаски.'
+            }
+        ];
+
+        const imageEl = document.querySelector('.city-image');
+        const titleEl = document.querySelector('.city-title');
+        const descEl = document.querySelector('.city-description p');
+        const priceEl = document.querySelector('.city-price');
+        const indicators = Array.from(document.querySelectorAll('.indicator'));
+
+        if (!imageEl || !titleEl || !descEl || !priceEl || indicators.length === 0) {
+            return;
+        }
+
+        let current = 0;
+        let timerId = null;
+
+        const applySlide = (index) => {
+            const slide = slides[index];
+            imageEl.src = slide.image;
+            imageEl.alt = slide.title;
+            titleEl.textContent = slide.title;
+            descEl.textContent = slide.description;
+            priceEl.textContent = slide.price;
+            indicators.forEach((dot, idx) => dot.classList.toggle('active', idx === index));
+            current = index;
+        };
+
+        const setSlide = (index) => {
+            const nextIndex = (index + slides.length) % slides.length;
+            applySlide(nextIndex);
+        };
+
+        const resetTimer = () => {
+            if (timerId) {
+                clearInterval(timerId);
+            }
+            timerId = setInterval(() => setSlide(current + 1), 6000);
+        };
+
+        indicators.forEach((dot, idx) => {
+            dot.addEventListener('click', () => {
+                setSlide(idx);
+                resetTimer();
+            });
+        });
+
+        // начальное заполнение без анимации
+        setSlide(0);
+        resetTimer();
+    });
+</script>
+{% endblock %}
+
+{% block body_background %}
+<img src="{% static 'images/krasivyi-vertikal-nyi-peizaz-vystrel-iz-gor-i-holmov-v-okruzenii-derev-ev-pod-cistym-nebom 1.png' %}" alt="Фон гор" class="mountain-bg">
+{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-title">
+                <div class="title-line">Создай своё</div>
+                <div class="title-line">Путешествие</div>
+            </div>
+
+            <div class="hero-buttons">
+                <a href="{% url 'tours:tour_create' %}" class="btn-primary">
+                    Собери свой тур
+                </a>
+                <a href="{% url 'tours:tour_list' %}" class="btn-secondary">
+                    Готовые туры
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="fade-transition"></div>
+
+    <div class="container">
+        <h2 class="section-title">Почему выбирают нас</h2>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3 class="feature-title">
+                    <span class="feature-main-text">Общий</span>
+                    <span class="feature-sub-text">маршрут</span>
+                </h3>
+                <p class="feature-description">
+                    Социально-телефон<br>
+                    наблюдается поставлен<br>
+                    исполнен в соответствии<br>
+                    подтверждается.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bed"></i>
+                </div>
+                <h3 class="feature-title">
+                    <span class="feature-main-text">Бронирование</span>
+                    <span class="feature-sub-text">жилья</span>
+                </h3>
+                <p class="feature-description">
+                    Назовитесь и формируйте<br>
+                    общее поле во всей силе.<br>
+                    Представьте для заданий<br>
+                    соплощадь.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <h3 class="feature-title">
+                    <span class="feature-main-text">Приглашение</span>
+                    <span class="feature-sub-text">друзей</span>
+                </h3>
+                <p class="feature-description">
+                    Лично распознайте друзей<br>
+                    в детстве и проверьте<br>
+                    учительница.
+                </p>
+            </div>
+        </div>
+
+        <div class="arrow-down">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+</section>
+
+<section class="timeline-section">
+    <div class="timeline-line"></div>
+
+    <div class="card card-left card-1">
+        <div class="icon-container">
+            <div class="circle-icon filled"></div>
+            <div class="icon-item">
+                <i class="fas fa-plane"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-time">10:30</div>
+            <h3 class="card-title">Прибытие в аэропорт</h3>
+            <p class="card-text">Подписание документов, прохождение паспортного контроля</p>
+        </div>
+    </div>
+
+    <div class="card card-right card-2 white-bg">
+        <div class="icon-container">
+            <div class="circle-icon hollow"></div>
+            <div class="icon-item">
+                <i class="fas fa-bus"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-time">11:15</div>
+            <h3 class="card-title">Трансфер из аэропорта в отель</h3>
+            <p class="card-text">Предположенный трансфер на автобусе или минивэне</p>
+        </div>
+    </div>
+
+    <div class="card card-left card-3 white-bg">
+        <div class="icon-container">
+            <div class="circle-icon hollow"></div>
+            <div class="icon-item">
+                <i class="fas fa-bell-concierge"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-time">12:45</div>
+            <h3 class="card-title">Заселение в отель</h3>
+            <p class="card-text">Регистрация на ресепшене, получение ключей от номера</p>
+        </div>
+    </div>
+
+    <div class="card card-right card-4">
+        <div class="icon-container">
+            <div class="circle-icon hollow"></div>
+            <div class="icon-item">
+                <i class="fas fa-person-running"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-time">14:30</div>
+            <h3 class="card-title">Прогулка по историческому центру</h3>
+            <p class="card-text">Посещение главной площади и набережной, осмотр достопримечательностей</p>
+        </div>
+    </div>
+
+    <div class="card card-left card-5">
+        <div class="icon-container">
+            <div class="circle-icon hollow"></div>
+            <div class="icon-item">
+                <i class="fas fa-landmark"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-time">16:00</div>
+            <h3 class="card-title">Посещение музея</h3>
+            <p class="card-text">Экскурсия по Национальному художественного музея</p>
+        </div>
+    </div>
+
+    <div class="card card-right card-6 white-bg">
+        <div class="icon-container">
+            <div class="circle-icon hollow"></div>
+            <div class="icon-item">
+                <i class="fas fa-bell-concierge"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-time">19:00</div>
+            <h3 class="card-title">Ужин в ресторане</h3>
+            <p class="card-text">Заказ ужина через официанта, отдых после экскурсий</p>
+        </div>
+    </div>
+
+    <div class="card card-left card-7">
+        <div class="icon-container">
+            <div class="circle-icon hollow"></div>
+            <div class="icon-item">
+                <i class="fas fa-bus"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-time">09:00</div>
+            <h3 class="card-title">Подготовка к отъезду</h3>
+            <p class="card-text">Сбор чемоданов, подготовка документов к выезду</p>
+        </div>
+    </div>
+
+    <div class="card card-right card-8">
+        <div class="icon-container">
+            <div class="circle-icon filled"></div>
+            <div class="icon-item">
+                <i class="fas fa-plane"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-time">11:30</div>
+            <h3 class="card-title">Трансфер в аэропорт</h3>
+            <p class="card-text">Отправление в аэропорт для обратного вылета</p>
+        </div>
+    </div>
+</section>
+
+<section class="city-card-section">
+    <div class="container">
+        <div class="city-card-container">
+            <div class="city-card">
+                <div class="city-card-image">
+                    <img src="{% static 'images/vid-na-sankt-peterburg-kolonna-aleksandra 1.png' %}" alt="Санкт-Петербург" class="city-image">
+                </div>
+
+                <div class="city-card-content">
+                    <h2 class="city-title">Санкт-Петербург</h2>
+
+                    <div class="city-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+
+                    <div class="city-description">
+                        <p></p>
+                    </div>
+
+                    <div class="city-card-footer">
+                        <div class="city-price-container">
+                            <div class="city-price"></div>
+                            <div class="city-action-btn-container">
+                                <button class="city-action-btn">
+                                    Отправиться
+                                </button>
+                            </div>
+                        </div>
+                        <div class="city-heart-btn-container">
+                            <button class="city-heart-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-indicators">
+                <div class="indicator active"></div>
+                <div class="indicator"></div>
+                <div class="indicator"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="photo-text-section">
+    <div class="container">
+        <div class="photo-text-container">
+            <div class="center-logo">
+                <img src="{% static 'images/Group 3.svg' %}" alt="Логотип" class="center-logo-img">
+            </div>
+
+            <div class="photo-top-left-group">
+                <div class="photo-item photo-narrow-tall">
+                    <img src="{% static 'images/image 15.png' %}" alt="Остров с диким характером" class="photo-img">
+                </div>
+                <div class="photo-item photo-wide-short">
+                    <img src="{% static 'images/image 17.png' %}" alt="Вулканы и водопады" class="photo-img">
+                </div>
+            </div>
+
+            <div class="text-top-right-group">
+                <div class="text-item text-small">
+                    <h3 class="text-title">Город на сопках, где встречаются морской бриз и азиатский колорит.</h3>
+                    <p class="text-subtitle">Уникальный рельеф с лестницами и подъёмниками, открывающими панорамные виды. Особая атмосфера портового города с его многоголосой историей.</p>
+                </div>
+                <div class="text-item text-small">
+                    <h3 class="text-title">Бухта Нагаева: одинокий страж холодных морей.</h3>
+                    <p class="text-subtitle">Легендарный маяк на фоне суровых скал и Охотского моря. Место силы с драматической историей и панорамными видами</p>
+                </div>
+            </div>
+
+            <div class="photo-bottom-right-group">
+                <div class="photo-item photo-wide-short">
+                    <img src="{% static 'images/image 18.png' %}" alt="Город на сопках" class="photo-img">
+                </div>
+                <div class="photo-item photo-narrow-tall">
+                    <img src="{% static 'images/image 16.png' %}" alt="Бухта Нагаева" class="photo-img">
+                </div>
+            </div>
+
+            <div class="text-bottom-left-group">
+                <div class="text-item text-small">
+                    <h3 class="text-title">Остров с диким характером: вулканы, водопады и китовые тропы.</h3>
+                    <p class="text-subtitle">Девственные ландшафты, где медведи гуляют по побережью Уникальные геологические помятники и термальные источники</p>
+                </div>
+                <div class="text-item text-small">
+                    <h3 class="text-title">Анфилада парадных проспектов, где каждый фасад — страница истории.</h3>
+                    <p class="text-subtitle">Улицы-музеи под открытым небом с мощённой брусчаткой</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

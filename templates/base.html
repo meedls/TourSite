@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TravelHub - Создай своё путешествие{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Стили для header с улучшенной видимостью */
+        .header {
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .header .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+        }
+        .header .logo-img {
+            height: 40px;
+        }
+        .header .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+        .header .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .header .nav-link:hover {
+            color: #3498db;
+        }
+        .header .btn-login {
+            background: #3498db;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .header .btn-login:hover {
+            background: #2980b9;
+        }
+        .header .nav-line {
+            display: none;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% block body_background %}{% endblock %}
+
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <a href="{% url 'tours:index' %}">
+                        <img src="{% static 'images/Group 2.svg' %}" alt="TravelHub Logo" class="logo-img">
+                    </a>
+                </div>
+
+                <ul class="nav-menu">
+                    <li><a href="{% url 'tours:index' %}" class="nav-link">Главная</a></li>
+                    <li><a href="{% url 'tours:tour_create' %}" class="nav-link">Туры</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'users:friends_list' %}" class="nav-link">Друзья</a></li>
+                        <li><a href="{% url 'users:profile' %}" class="nav-link">Профиль</a></li>
+                    {% endif %}
+                </ul>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'users:logout' %}" class="btn-login">Выход</a>
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="btn-login">Вход</a>
+                {% endif %}
+                <div class="nav-line"></div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <img src="{% static 'images/Group 2.svg' %}" alt="TravelHub Logo" class="footer-logo-img">
+                    </div>
+                </div>
+
+                <div class="footer-center">
+                    <div class="footer-info">
+                        <h3 class="footer-category">ИНФОРМАЦИЯ</h3>
+                        <ul class="footer-links">
+                            <li><a href="#" class="footer-link">О нас</a></li>
+                            <li><a href="{% url 'tours:tour_list' %}" class="footer-link">Готовые туры</a></li>
+                            {% if user.is_authenticated %}
+                                <li><a href="{% url 'users:profile' %}" class="footer-link">Профиль</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'hotels:hotel_list' %}" class="footer-link">Отели и билеты</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-right">
+                    <div class="footer-contacts">
+                        <h3 class="footer-category">КОНТАКТЫ</h3>
+                        <ul class="footer-links">
+                            <li><a href="mailto:journey@gmail.ru" class="footer-link">journey@gmail.ru</a></li>
+                            <li><a href="tel:88000003555" class="footer-link">8 800 000 35 55</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-social">
+                        <h3 class="footer-category">МЫ В ИНТЕРНЕТЕ</h3>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-copyright">
+                        <p>Все права защищены 2025 ©</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
