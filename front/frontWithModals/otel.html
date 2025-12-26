@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фильтр отелей</title>
+    <link rel="stylesheet" href="otel.css">
+</head>
+<body>
+    <div class="container">
+        <div class="filters-card">
+            
+            <!-- Цена -->
+            <div class="filter-section">
+                <div class="price-header">
+                    <h2 class="filter-title">Цена</h2>
+                    <div class="price-value">4.500</div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-track"></div>
+                    <div class="slider-range" style="left: 0%; right: 30%;"></div>
+                    <div class="slider-thumb" style="left: 70%;"></div>
+                </div>
+                <div class="any-price">
+                    <input type="checkbox" id="any-price" checked>
+                    <label for="any-price" class="checkbox-label">
+                        <span class="custom-checkbox"></span>
+                        Любая
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Звёздность -->
+            <div class="filter-section">
+                <h2 class="filter-title">Звёздность</h2>
+                <div class="rating-grid">
+                    <div class="rating-column">
+                        <div class="rating-option">
+                            <input type="checkbox" id="5-stars" checked>
+                            <label for="5-stars" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                5 звёзд
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="checkbox" id="4-stars" checked>
+                            <label for="4-stars" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                4 звезды
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="checkbox" id="3-stars" checked>
+                            <label for="3-stars" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                3 звезды
+                            </label>
+                        </div>
+                    </div>
+                    <div class="rating-column">
+                        <div class="rating-option">
+                            <input type="checkbox" id="2-stars">
+                            <label for="2-stars" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                2 звезды
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="checkbox" id="no-stars">
+                            <label for="no-stars" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                Без звёзд
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Тип размещения -->
+            <div class="filter-section">
+                <h2 class="filter-title">Тип размещения</h2>
+                <div class="accommodation-options">
+                    <div class="accommodation-option">
+                        <input type="checkbox" id="hotel" checked>
+                        <label for="hotel" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Отель
+                        </label>
+                    </div>
+                    <div class="accommodation-option">
+                        <input type="checkbox" id="apartments">
+                        <label for="apartments" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Апартаменты
+                        </label>
+                    </div>
+                    <div class="accommodation-option">
+                        <input type="checkbox" id="hostel">
+                        <label for="hostel" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Хостел
+                        </label>
+                    </div>
+                    <div class="accommodation-option">
+                        <input type="checkbox" id="guest-house">
+                        <label for="guest-house" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Гостевой дом
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Удобства в номере -->
+            <div class="filter-section">
+                <h2 class="filter-title">Удобства в номере</h2>
+                <div class="amenities-options">
+                    <div class="amenities-option">
+                        <input type="checkbox" id="air-conditioning" checked>
+                        <label for="air-conditioning" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Кондиционер
+                        </label>
+                    </div>
+                    <div class="amenities-option">
+                        <input type="checkbox" id="wifi" checked>
+                        <label for="wifi" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Wi-Fi
+                        </label>
+                    </div>
+                    <div class="amenities-option">
+                        <input type="checkbox" id="private-bathroom" checked>
+                        <label for="private-bathroom" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Собственная ванная
+                        </label>
+                    </div>
+                    <div class="amenities-option">
+                        <input type="checkbox" id="tv">
+                        <label for="tv" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Телевизор
+                        </label>
+                    </div>
+                    <div class="amenities-option">
+                        <input type="checkbox" id="safe">
+                        <label for="safe" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Сейф
+                        </label>
+                    </div>
+                    <div class="amenities-option">
+                        <input type="checkbox" id="mini-kitchen">
+                        <label for="mini-kitchen" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Мини-кухня
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Услуги отеля -->
+            <div class="filter-section">
+                <h2 class="filter-title">Услуги отеля</h2>
+                <div class="hotel-services-options">
+                    <div class="hotel-services-option">
+                        <input type="checkbox" id="pool" checked>
+                        <label for="pool" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Бассейн
+                        </label>
+                    </div>
+                    <div class="hotel-services-option">
+                        <input type="checkbox" id="spa">
+                        <label for="spa" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            СПА
+                        </label>
+                    </div>
+                    <div class="hotel-services-option">
+                        <input type="checkbox" id="restaurant">
+                        <label for="restaurant" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Ресторан
+                        </label>
+                    </div>
+                    <div class="hotel-services-option">
+                        <input type="checkbox" id="breakfast" checked>
+                        <label for="breakfast" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Завтрак включён
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Расстояние от центра -->
+            <div class="filter-section">
+                <h2 class="filter-title">Расстояние от центра</h2>
+                <div class="distance-slider-container">
+                    <div class="distance-track"></div>
+                    <div class="distance-range" style="left: 0%; right: 60%;"></div>
+                    <div class="distance-thumb" style="left: 40%;"></div>
+                </div>
+                <div class="distance-labels">
+                    <span class="distance-label left">Любое</span>
+                    <span class="distance-label right">До 1 км</span>
+                </div>
+            </div>
+            
+            <!-- Кнопка сбросить и кнопка показать -->
+            <div class="filter-section reset-section">
+                <div class="footer-controls">
+                    <button class="reset-button">
+                        Сбросить
+                    </button>
+                    <button class="show-button">
+                        Показать <span class="hotels-count">(12)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

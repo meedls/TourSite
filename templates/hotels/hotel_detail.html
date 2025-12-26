@@ -1,20 +1,19 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ hotel.name }} - Отель в {{ hotel.city.name }}</title>
-    <link rel="stylesheet" href="{% static 'css/hotel_detail.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-<div class="container">
-    <a href="{% url 'hotels:hotel_list' %}" class="back-button">
+
+{% block title %}{{ hotel.name }} - Отель в {{ hotel.city.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/hotel_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="hotel-detail-container">
+    <a href="{% url 'tours:tour_create' %}" class="back-button">
         <i class="fas fa-arrow-left"></i>
         <span>Назад</span>
     </a>
-
+    
     <header class="hotel-header">
         <div class="hotel-content">
             <div class="hotel-image">
@@ -24,10 +23,10 @@
                     <img src="{% static 'images/image 20.png' %}" alt="{{ hotel.name }}">
                 {% endif %}
             </div>
-
+            
             <div class="hotel-info">
                 <h1 class="hotel-name">{{ hotel.name }}</h1>
-
+                
                 <div class="hotel-rating-line">
                     <div class="stars">
                         {% for i in "12345" %}
@@ -40,11 +39,11 @@
                     </div>
                     <span class="rating-number">{{ reviews.count }}</span>
                 </div>
-
+                
                 <div class="hotel-description">
-                    <p>{{ hotel.description }}</p>
+                    <p>{{ hotel.description|default:"Описание отеля будет добавлено" }}</p>
                 </div>
-
+                
                 <div class="location-info">
                     <div class="location-item">
                         <i class="fas fa-map-marker-alt"></i>
@@ -55,14 +54,14 @@
                         <span>{{ hotel.city.name }}</span>
                     </div>
                 </div>
-
+                
                 <div class="booking-section">
                     <div class="price-info">
-                        <span class="price">{{ hotel.price_min }} ₽ <span class="price-period">за ночь</span></span>
+                        <span class="price">{{ hotel.price_min|floatformat:0 }} ₽ <span class="price-period">за ночь</span></span>
                     </div>
-
+                    
                     <div class="booking-actions">
-                        <a href="{% url 'hotels:hotel_book' hotel.pk %}" class="book-button">Забронировать</a>
+                        <a href="{% url 'hotels:hotel_book' hotel.pk %}" class="book-button" data-requires-auth="true">Забронировать</a>
                         <button class="favorite-button">
                             <i class="far fa-heart"></i>
                         </button>
@@ -71,10 +70,10 @@
             </div>
         </div>
     </header>
-
+    
     <section class="services-section">
         <h2 class="services-title">Услуги и удобства</h2>
-
+        
         <div class="services-list">
             {% for service in hotel.services.all %}
             <div class="service-item">
@@ -91,9 +90,9 @@
                 </div>
                 <div class="service-action">
                     {% if service.price %}
-                        <button class="details-button">{{ service.price }} ₽</button>
+                        <button class="details-button">{{ service.price|floatformat:0 }} ₽</button>
                     {% else %}
-                        <button class="select-button">Выбрать</button>
+                        <button class="select-button open-minibar-modal">Выбрать</button>
                     {% endif %}
                 </div>
             </div>
@@ -108,9 +107,10 @@
                     <h3>Бесплатный мини-бар (безалкогольный)</h3>
                 </div>
                 <div class="service-action">
-                    <button class="select-button">Выбрать</button>
+                    <button class="select-button open-minibar-modal">Выбрать</button>
                 </div>
             </div>
+            
             <div class="service-item">
                 <div class="service-icon">
                     <div class="icon-circle">
@@ -123,6 +123,7 @@
                 <div class="service-action">
                 </div>
             </div>
+            
             <div class="service-item">
                 <div class="service-icon">
                     <div class="icon-circle">
@@ -138,7 +139,7 @@
             {% endfor %}
         </div>
     </section>
-
+    
     <section class="reviews-section">
         <div class="reviews-header">
             <div class="reviews-title-section">
@@ -159,7 +160,7 @@
                 <span>{{ reviews.count }} отзыв{{ reviews.count|pluralize:"а,ов" }}</span>
             </div>
         </div>
-
+        
         <div class="reviews-list">
             {% for review in reviews %}
             <div class="review-card">
@@ -169,7 +170,7 @@
                             <i class="fas fa-user-circle"></i>
                         </div>
                         <div class="reviewer-details">
-                            <h3 class="reviewer-name">{{ review.user.username }}</h3>
+                            <h3 class="reviewer-name">{{ review.user.get_full_name|default:review.user.username }}</h3>
                             <div class="review-rating">
                                 <div class="stars">
                                     {% for i in "12345" %}
@@ -188,21 +189,21 @@
                     <button class="subscribe-button">Подписаться</button>
                     {% endif %}
                 </div>
-
+                
                 <div class="review-text">
                     <p>{{ review.text }}</p>
                 </div>
-
+                
                 {% if user.is_authenticated %}
                 <div class="review-actions">
                     <div class="like-dislike">
                         <a href="{% url 'hotels:review_like' review.pk %}" class="like-button">
                             <i class="far fa-thumbs-up"></i>
-                            <span>{{ review.likes_count }}</span>
+                            <span>{{ review.likes_count|default:0 }}</span>
                         </a>
                         <a href="{% url 'hotels:review_dislike' review.pk %}" class="dislike-button">
                             <i class="far fa-thumbs-down"></i>
-                            <span>{{ review.dislikes_count }}</span>
+                            <span>{{ review.dislikes_count|default:0 }}</span>
                         </a>
                     </div>
                 </div>
@@ -213,29 +214,29 @@
             {% endfor %}
         </div>
     </section>
-
+    
     <section class="important-info-section">
         <div class="important-info-fullwidth">
             <div class="important-info-content">
                 <h2 class="important-info-title">Важно знать</h2>
-
+                
                 <div class="important-info-grid">
                     <div class="info-left">
                         <div class="info-item">
                             <h3 class="info-label">Заезд/выезд:</h3>
                             <p class="info-text">14:00 / 12:00</p>
                         </div>
-
+                        
                         <div class="info-item">
                             <h3 class="info-label">Дети:</h3>
                             <p class="info-text">Бесплатно до 12 лет</p>
                         </div>
-
+                        
                         <div class="info-item">
                             <h3 class="info-label">Питание:</h3>
                             <p class="info-text">Завтрак включён</p>
                         </div>
-
+                        
                         <div class="info-item">
                             <h3 class="info-label">Город:</h3>
                             <p class="info-text">{{ hotel.city.name }}, {{ hotel.city.country }}</p>
@@ -247,53 +248,169 @@
     </section>
 </div>
 
-<footer class="footer">
-    <div class="footer-container">
-        <div class="footer-content">
-            <div class="footer-left">
-                <div class="footer-logo">
-                    <img src="{% static 'images/Group 2.svg' %}" alt="TravelHub Logo" class="footer-logo-img">
-                </div>
-            </div>
-
-            <div class="footer-center">
-                <div class="footer-info">
-                    <h3 class="footer-category">ИНФОРМАЦИЯ</h3>
-                    <ul class="footer-links">
-                        <li><a href="{% url 'tours:index' %}" class="footer-link">О нас</a></li>
-                        <li><a href="{% url 'tours:tour_list' %}" class="footer-link">Готовые туры</a></li>
-                        {% if user.is_authenticated %}
-                            <li><a href="{% url 'users:profile' %}" class="footer-link">Профиль</a></li>
-                        {% endif %}
-                        <li><a href="{% url 'hotels:hotel_list' %}" class="footer-link">Отели и билеты</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-right">
-                <div class="footer-contacts">
-                    <h3 class="footer-category">КОНТАКТЫ</h3>
-                    <ul class="footer-links">
-                        <li><a href="mailto:journey@gmail.ru" class="footer-link">journey@gmail.ru</a></li>
-                        <li><a href="tel:88000003555" class="footer-link">8 800 000 35 55</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-social">
-                    <h3 class="footer-category">МЫ В ИНТЕРНЕТЕ</h3>
-                    <div class="social-icons">
-                        <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+<!-- Модальное окно для выбора мини-бара -->
+<div class="modal-overlay minibar-modal" id="minibarModal" style="display:none;">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">Выбор напитков и закусок</h2>
+            <button class="modal-close" id="closeMinibarModal">&times;</button>
+        </div>
+        <div class="modal-content">
+            <div class="selection-panel">
+                <div class="panel-content">
+                    <!-- Заголовок Выбор -->
+                    <div class="choice-title">Выбор:</div>
+                    
+                    <!-- Вертикальное расположение разделов -->
+                    <div class="vertical-sections">
+                        <!-- Раздел напитков -->
+                        <div class="selection-section vertical-section">
+                            <div class="section-title">Напитки:</div>
+                            
+                            <div class="options-list">
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Кофе(зерновой/капсульный/растворимый)</span>
+                                </label>
+                                
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Чай(черный/зеленый/травяной)</span>
+                                </label>
+                                
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Молоко/Сливки</span>
+                                </label>
+                                
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Вода(газированная/негазированная)</span>
+                                </label>
+                                
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Соки(апельсиновый, яблочный)</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Раздел закусок -->
+                        <div class="selection-section vertical-section">
+                            <div class="section-title">Закуски:</div>
+                            
+                            <div class="options-list">
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Снеки (чипсы, орешки, сухарики)</span>
+                                </label>
+                                
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Сладости(шоколад, печенье, батончики)</span>
+                                </label>
+                                
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Фрукты(яблоки, бананы)</span>
+                                </label>
+                                
+                                <label class="option-item">
+                                    <input type="checkbox" class="checkbox-input">
+                                    <span class="checkbox-custom"></span>
+                                    <span class="option-text">Мини-сэндвичи</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="footer-copyright">
-                    <p>Все права защищены 2025 ©</p>
-                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-submit-button" id="saveMinibarSelection">Сохранить выбор</button>
             </div>
         </div>
     </div>
-</footer>
-</body>
-</html>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Модальное окно мини-бара
+        const selectButtons = document.querySelectorAll('.open-minibar-modal');
+        const modal = document.getElementById('minibarModal');
+        const closeModal = document.getElementById('closeMinibarModal');
+        const modalOverlay = document.querySelector('.minibar-modal');
+        const modalSubmitButton = document.getElementById('saveMinibarSelection');
+        
+        // Открытие модального окна
+        selectButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (modal) {
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+        
+        // Закрытие модального окна
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                if (modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+        
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+        
+        // Сохранение выбора
+        if (modalSubmitButton) {
+            modalSubmitButton.addEventListener('click', function() {
+                const selectedCheckboxes = document.querySelectorAll('.minibar-modal .checkbox-input:checked');
+                const selectedItems = [];
+                
+                selectedCheckboxes.forEach(checkbox => {
+                    const optionText = checkbox.closest('.option-item').querySelector('.option-text').textContent;
+                    selectedItems.push(optionText);
+                });
+                
+                if (selectedItems.length > 0) {
+                    // Здесь можно добавить отправку данных на сервер
+                    console.log('Выбрано:', selectedItems.join(', '));
+                }
+                
+                if (modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+        
+        // Закрытие по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+    });
+</script>
+{% endblock %}

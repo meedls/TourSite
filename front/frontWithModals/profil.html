@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" href="profil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Шапка профиля -->
+        <div class="profile-header">
+            <div class="profile-info">
+                <div class="avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <h1 class="user-name">Иван Иванов</h1>
+                    <p class="user-id">ID: 123456789</p>
+                </div>
+            </div>
+            <div class="settings">
+                <button class="settings-btn">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Путешествия -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Путешествия</h2>
+                <div class="bookings-header">
+                    <h3 class="subsection-title">Мои бронирования <span class="count">(5)</span></h3>
+                    <button class="details-btn">Подробнее</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Способ оплаты и избранные города -->
+        <div class="info-section">
+            <div class="info-item">
+                <div class="info-content">
+                    <h3>Способ оплаты</h3>
+                </div>
+                <button class="arrow-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-content">
+                    <h3>Избранные города <span class="count">(12)</span></h3>
+                </div>
+                <button class="arrow-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Разделительная полоса после избранных городов -->
+        <div class="divider-after-cities"></div>
+
+        <!-- Мои друзья -->
+        <div class="section">
+            <h2 class="section-title">Мои друзья</h2>
+            
+            <div class="info-item">
+                <div class="info-content">
+                    <h3>Друзья <span class="count">(24)</span></h3>
+                </div>
+                <button class="arrow-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-content">
+                    <h3>Подписчики <span class="count">(156)</span></h3>
+                </div>
+                <button class="arrow-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Разделительная полоса после подписчиков -->
+        <div class="divider-after-subscribers"></div>
+
+        <!-- Помощь -->
+        <div class="section">
+            <h2 class="section-title">Помощь</h2>
+            
+            <div class="info-item">
+                <div class="info-content">
+                    <h3>Поддержка</h3>
+                </div>
+                <button class="arrow-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-content">
+                    <h3>Условия использования</h3>
+                </div>
+                <button class="arrow-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Кнопка выхода -->
+        <div class="logout-section">
+            <button class="logout-btn"> Выход
+            </button>
+            </div>
+    </div>
+</body>
+</html>

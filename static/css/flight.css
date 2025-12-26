@@ -997,3 +997,251 @@ input:checked + .toggle-slider:before {
         align-self: flex-end;
     }
 }
+
+/* Baggage Modal Styles */
+.baggage-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.baggage-modal {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.baggage-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    border: none;
+    background: #f5f7fa;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    line-height: 1;
+    z-index: 10;
+}
+
+.baggage-modal-close:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+.baggage-panel {
+    width: 100%;
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+    border: 1px solid #eaeaea;
+}
+
+.panel-header {
+    background-color: white;
+    color: #001a33;
+    padding: 24px;
+    text-align: center;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.panel-title {
+    font-size: 30px;
+    font-weight: 600;
+    color: #001a33;
+    letter-spacing: 0.2px;
+}
+
+.panel-content {
+    padding: 24px;
+}
+
+.baggage-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0;
+}
+
+.luggage-item {
+    margin-top: 8px;
+}
+
+.item-icon {
+    font-size: 36px;
+    color: #001a33;
+    margin-right: 20px;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.luggage-icon {
+    margin-top: 4px;
+}
+
+.item-content {
+    flex: 1;
+}
+
+.item-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #001a33;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.item-dimensions {
+    font-size: 18px;
+    font-weight: 700;
+    color: #001a33;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}
+
+.specifications {
+    margin-top: 0;
+}
+
+.spec-row {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.spec-row:last-child {
+    margin-bottom: 0;
+}
+
+.spec-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #001a33;
+    min-width: 90px;
+    padding-top: 2px;
+}
+
+.spec-value {
+    font-size: 19px;
+    color: #001a33;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.spec-value-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.dimensions-note {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    margin-top: 4px;
+}
+
+.divider {
+    height: 1px;
+    background-color: #eaeaea;
+    margin: 24px 0;
+    width: 100%;
+}
+
+.section-header {
+    margin-bottom: 16px;
+}
+
+.section-title-large {
+    font-size: 24px;
+    font-weight: 600;
+    color: #001a33;
+    line-height: 1.3;
+    margin-bottom: 12px;
+}
+
+/* Адаптивность для модального окна */
+@media (max-width: 480px) {
+    .baggage-modal {
+        max-width: 100%;
+        margin: 10px;
+    }
+    
+    .panel-header {
+        padding: 20px;
+    }
+    
+    .panel-content {
+        padding: 20px;
+    }
+    
+    .panel-title {
+        font-size: 20px;
+    }
+    
+    .item-title {
+        font-size: 15px;
+    }
+    
+    .section-title-large {
+        font-size: 22px;
+    }
+    
+    .item-icon {
+        font-size: 32px;
+        margin-right: 16px;
+        width: 50px;
+        height: 50px;
+    }
+    
+    .item-dimensions {
+        font-size: 22px;
+    }
+    
+    .spec-label {
+        min-width: 80px;
+        font-size: 15px;
+    }
+    
+    .spec-value {
+        font-size: 15px;
+    }
+    
+    .dimensions-note {
+        font-size: 12px;
+    }
+}

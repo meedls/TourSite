@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Способы оплаты</title>
+    <link rel="stylesheet" href="oplata.css">
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-card">
+            <div class="payment-content">
+                <!-- Заголовок в левом углу -->
+                <h1 class="payment-title">Способы оплаты</h1>
+                
+                <!-- 3 контейнера с логотипами -->
+                <div class="payment-methods-row">
+                    <div class="payment-method-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" 
+                             alt="MasterCard" class="logo-image mastercard-image">
+                    </div>
+                    
+                    <div class="payment-method-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Mir-logo.SVG.svg/1024px-Mir-logo.SVG.svg.png" 
+                             alt="МИР" class="logo-image mir-image">
+                    </div>
+                    
+                    <div class="payment-method-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" 
+                             alt="Visa" class="logo-image visa-image">
+                    </div>
+                </div>
+                
+                <!-- Сумма оплаты -->
+                <div class="amount-section">
+                    <div class="amount-left">
+                        <div class="amount-label">Сумма оплаты</div>
+                        <div class="amount-value">8.000 ₽</div>
+                    </div>
+                    <button class="change-btn">Изменить</button>
+                </div>
+                
+                <!-- Форма оплаты -->
+                <form class="payment-form">
+                    <!-- Номер карты с иконкой -->
+                    <div class="form-group card-number-group">
+                        <div class="form-columns">
+                            <div class="card-input-wrapper">
+                                <input type="text" id="cardNumber" class="form-input card-number-input" 
+                                       placeholder="Номер карты" maxlength="19">
+                                <div class="card-type-badge">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" 
+                                         alt="Visa" class="badge-image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Имя на карте -->
+                    <div class="form-group">
+                        <input type="text" id="cardName" class="form-input" 
+                               placeholder="Имя на карте">
+                    </div>
+                    
+                    <!-- Срок действия и CVC/CVV с вопросиком -->
+                    <div class="form-group combined-group">
+                        <div class="combined-inputs-with-help">
+                            <div class="expiry-cvc-container">
+                                <input type="text" id="cardExpiry" class="form-input expiry-input" 
+                                       placeholder="Срок действия">
+                                       <div class="field-separator">/</div>
+                                <div class="cvc-with-help">
+                                    <input type="text" id="cardCvc" class="form-input cvc-input" 
+                                           placeholder="CVC/CVV" maxlength="3">
+                                    <div class="cvc-help">
+                                        <span>?</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопка оплаты -->
+                    <div class="pay-button-container">
+                        <button type="submit" class="pay-button">
+                            <span class="pay-text">Оплатить</span>
+                            <span class="pay-amount">8.000 ₽</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

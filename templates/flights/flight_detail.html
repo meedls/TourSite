@@ -15,7 +15,7 @@
         </div>
 
         <div class="info-container">
-            <a href="{% url 'flights:flight_list' %}" class="back-link">
+            <a href="{% url 'tours:tour_create' %}" class="back-link">
                 <i class="fas fa-arrow-left"></i> Назад
             </a>
 
@@ -46,11 +46,7 @@
             <div class="price-section">
                 <div class="price">{{ flight.price }} ₽</div>
                 <div class="buttons-container">
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'flights:flight_book' flight.pk %}" class="btn-buy">Купить</a>
-                    {% else %}
-                        <a href="{% url 'users:login' %}" class="btn-buy">Купить</a>
-                    {% endif %}
+                    <a href="{% url 'flights:flight_book' flight.pk %}" class="btn-buy" data-requires-auth="true">Купить</a>
                     <button class="btn-wishlist">
                         <i class="far fa-heart"></i>
                     </button>
@@ -110,7 +106,7 @@
                         <span class="condition-main">Ручная кладь: 1 место до 10 кг</span>
                     </div>
                 </div>
-                <button class="condition-btn">Выбрать</button>
+                <button class="condition-btn open-baggage-modal">Выбрать</button>
             </div>
 
             <div class="condition-row">
@@ -212,4 +208,87 @@
         </div>
     </section>
 </div>
+
+<!-- Baggage Modal -->
+<div class="baggage-modal-overlay" style="display:none;">
+    <div class="baggage-modal">
+        <button class="baggage-modal-close" type="button">&times;</button>
+        <div class="baggage-panel">
+            <div class="panel-header">
+                <h1 class="panel-title">Ручная кладь и личные вещи</h1>
+            </div>
+            
+            <div class="panel-content">
+                <!-- Секция ручной клади -->
+                <div class="baggage-item">
+                    <div class="item-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-title">Суммарные габариты: не более</div>
+                        <div class="item-dimensions">36×30×27 см</div>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <!-- Секция багажа -->
+                <div class="baggage-section">
+                    <div class="section-header">
+                        <div class="section-title-large">Багаж (1 единица)</div>
+                    </div>
+                    
+                    <div class="baggage-item luggage-item">
+                        <div class="item-icon luggage-icon">
+                            <i class="fas fa-suitcase-rolling"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="specifications">
+                                <div class="spec-row">
+                                    <span class="spec-label">Вес:</span>
+                                    <span class="spec-value">до 10 кг</span>
+                                </div>
+                                <div class="spec-row">
+                                    <span class="spec-label">Габариты:</span>
+                                    <div class="spec-value-wrapper">
+                                        <div class="spec-value">до 203 см</div>
+                                        <div class="dimensions-note">по сумме трёх измерений (длина+ширина+высота)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const baggageModal = document.querySelector('.baggage-modal-overlay');
+    const openBtn = document.querySelector('.open-baggage-modal');
+    const closeBtn = document.querySelector('.baggage-modal-close');
+    
+    if (openBtn) {
+        openBtn.addEventListener('click', function() {
+            baggageModal.style.display = 'flex';
+        });
+    }
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            baggageModal.style.display = 'none';
+        });
+    }
+    
+    if (baggageModal) {
+        baggageModal.addEventListener('click', function(e) {
+            if (e.target === baggageModal) {
+                baggageModal.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

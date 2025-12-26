@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.confirmation-container {
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eaeaea;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.confirmation-title {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.confirmation-subtitle {
+    color: #666;
+    margin-bottom: 40px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.code-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.code-input {
+    width: 60px;
+    height: 70px;
+    background: white;
+    color: #333;
+    border-radius: 10px;
+    font-size: 28px;
+    text-align: center;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.3s ease;
+    border: 1px solid #333;
+}
+
+.code-input:focus {
+    border-color: #1a237e;
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+}
+
+.dash-line {
+    width: 20px; /* Длиннее */
+    height: 5px; /* Толще */
+    background: black;
+    border-radius: 20%; /* Закругление 20% */
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.next-button {
+    padding: 10px 40px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 40px;
+}
+
+.next-button:hover {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.next-button:active {
+    transform: translateY(0);
+    background: #000;
+}
+
+@media (max-width: 480px) {
+    .confirmation-container {
+        padding: 30px 20px;
+        max-width: 400px;
+        border-radius: 25px;
+    }
+    
+    .confirmation-title {
+        font-size: 32px;
+    }
+    
+    .confirmation-subtitle {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .code-container {
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    
+    .code-input {
+        width: 50px;
+        height: 60px;
+        font-size: 24px;
+        border-radius: 15px;
+    }
+    
+    .dash-line {
+        width: 50px;
+        height: 6px;
+    }
+    
+    .next-button {
+        padding: 8px 35px;
+        font-size: 15px;
+        height: 38px;
+        border-radius: 20px;
+    }
+}
+
+@media (max-width: 320px) {
+    .confirmation-container {
+        max-width: 320px;
+        padding: 25px 15px;
+        border-radius: 20px;
+    }
+    
+    .confirmation-title {
+        font-size: 28px;
+    }
+    
+    .confirmation-subtitle {
+        font-size: 14px;
+    }
+    
+    .code-input {
+        width: 45px;
+        height: 55px;
+        font-size: 22px;
+        border-radius: 12px;
+    }
+    
+    .dash-line {
+        width: 45px;
+        height: 5px;
+    }
+    
+    .next-button {
+        padding: 6px 30px;
+        height: 36px;
+    }
+}

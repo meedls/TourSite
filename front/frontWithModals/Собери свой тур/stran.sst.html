@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирование билетов</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-bg">
+            <img src="image\00_generic_facebook-001.jpg" 
+                 alt="Фон" class="bg-image">
+        </div>
+        
+        <nav class="top-nav">
+            <div class="logo">
+                <img src="image\Group 3 — копия.svg" alt="Логотип">
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#">Главная</a></li>
+                <li><a href="#" class="active">Туры</a></li>
+                <li><a href="#">Друзья</a></li>
+                <li><button class="nav-link profile-link" id="navProfileBtn">
+                            Профиль
+                        </button>
+                </li>
+            </ul>
+            
+            <a href="#" class="login-btn btn-login">Вход</a>
+        </nav>
+        
+        <div class="direction-buttons">
+            <div class="direction-btn city-btn">
+                <span class="btn-text">Город</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="right-buttons">
+                <div class="direction-btn to-btn">
+                    <span class="btn-text">Туда</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                
+                <span class="dash">—</span>
+                
+                <div class="direction-btn back-btn">
+                    <span class="btn-text">Обратно</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="next-btn-container">
+            <button class="next-btn">Далее</button>
+        </div>
+    </header>
+
+    <!-- Модальное окно выбора города -->
+<div class="city-modal-overlay" id="cityModalOverlay">
+    <div class="city-modal-container">
+        <div class="city-modal-header">
+            <h1 class="city-modal-title">Город</h1>
+            <button class="city-modal-close" id="cityModalClose">&times;</button>
+        </div>
+        <div class="city-modal-divider"></div>
+        
+        <div class="cities-list">
+            <div class="city-item">
+                <div class="city-name">Санкт-Петербург</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Москва</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Владивосток</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Самара</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Сахалин</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Тюмень</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Челябинск</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Чебоксары</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Магадан</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Новосибирск</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Екатеринбург</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Красноярск</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Казань</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Нижний Новгород</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Омск</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Ростов-на-Дону</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Уфа</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Волгоград</div>
+                <div class="city-divider last-divider"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Модальное окно регистрации -->
+<div class="modal-overlay" id="registrationModal">
+    <div class="modal-container">
+        <div class="modal-close" id="closeModal">&times;</div>
+        
+        <div class="registration-content">
+            <h1 class="registration-title">Регистрация</h1>
+            
+            <form id="registrationForm">
+                <div class="form-group">
+                    <input type="email" 
+                           id="email" 
+                           class="form-input" 
+                           placeholder="Email*"
+                           required
+                           autocomplete="email">
+                </div>
+                
+                <div class="form-group">
+                    <div class="password-container">
+                        <input type="password" 
+                               id="password" 
+                               class="form-input" 
+                               placeholder="Пароль"
+                               autocomplete="new-password">
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button type="submit" class="next-button" id="nextBtn">
+                        Далее →
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения по SMS -->
+<div class="modal-overlay" id="confirmationModal">
+    <div class="confirmation-container">
+        <div class="modal-close" id="closeConfirmationModal">&times;</div>
+        
+        <h1 class="confirmation-title">Подтверждение</h1>
+        <p class="confirmation-subtitle">Введите 4 цифры из SMS</p>
+        
+        <div class="code-container">
+            <input type="text" 
+                   class="code-input" 
+                   maxlength="1"
+                   inputmode="numeric"
+                   pattern="[0-9]"
+                   id="code1">
+            
+            <input type="text" 
+                   class="code-input" 
+                   maxlength="1"
+                   inputmode="numeric"
+                   pattern="[0-9]"
+                   id="code2">
+            
+            <div class="dash-line"></div>
+            
+            <input type="text" 
+                   class="code-input" 
+                   maxlength="1"
+                   inputmode="numeric"
+                   pattern="[0-9]"
+                   id="code3">
+            
+            <input type="text" 
+                   class="code-input" 
+                   maxlength="1"
+                   inputmode="numeric"
+                   pattern="[0-9]"
+                   id="code4">
+        </div>
+        
+        <div class="confirmation-button-container">
+            <button type="button" class="confirmation-next-button" id="confirmBtn">
+                Подтвердить
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно профиля -->
+<div class="modal-overlay" id="profileModal">
+    <div class="profile-modal-container">
+        <div class="modal-close" id="closeProfileModal">&times;</div>
+        
+        <div class="profile-container">
+            <!-- Шапка профиля -->
+            <div class="profile-header">
+                <div class="profile-info">
+                    <div class="avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <h1 class="user-name" id="profileUserName">Иван Иванов</h1>
+                        <p class="user-id" id="profileUserId">ID: 123456789</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Путешествия -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Путешествия</h2>
+                    <div class="bookings-header">
+                        <h3 class="subsection-title">Мои бронирования <span class="count">(5)</span></h3>
+                        <button class="details-btn" id="bookingsDetailsBtn">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Способ оплаты и избранные города -->
+            <div class="info-section">
+                <div class="info-item" id="paymentMethodItem">
+                    <div class="info-content">
+                        <h3>Способ оплаты</h3>
+                    </div>
+                    <button class="arrow-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="info-item" id="favoriteCitiesItem">
+                    <div class="info-content">
+                        <h3>Избранные города <span class="count">(12)</span></h3>
+                    </div>
+                    <button class="arrow-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Разделительная полоса после избранных городов -->
+            <div class="divider-after-cities"></div>
+
+            <!-- Мои друзья -->
+            <div class="section">
+                <h2 class="section-title">Мои друзья</h2>
+                
+                <div class="info-item" id="friendsItem">
+                    <div class="info-content">
+                        <h3>Друзья <span class="count">(24)</span></h3>
+                    </div>
+                    <button class="arrow-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="info-item" id="subscribersItem">
+                    <div class="info-content">
+                        <h3>Подписчики <span class="count">(156)</span></h3>
+                    </div>
+                    <button class="arrow-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Разделительная полоса после подписчиков -->
+            <div class="divider-after-subscribers"></div>
+
+            <!-- Помощь -->
+            <div class="section">
+                <h2 class="section-title">Помощь</h2>
+                
+                <div class="info-item" id="supportItem">
+                    <div class="info-content">
+                        <h3>Поддержка</h3>
+                    </div>
+                    <button class="arrow-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="info-item" id="termsItem">
+                    <div class="info-content">
+                        <h3>Условия использования</h3>
+                    </div>
+                    <button class="arrow-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Кнопка выхода -->
+            <div class="logout-section">
+                <button class="logout-btn" id="logoutBtn">
+                    Выход
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно бронирований -->
+<div class="bookings-modal-overlay" id="bookingsModal">
+    <div class="bookings-modal-container">
+        <div class="bookings-modal-close" id="closeBookingsModal">&times;</div>
+        
+        <div class="booking-card">
+            <div class="booking-header">
+                <div class="booking-title">Мои бронирования</div>
+            </div>
+            
+            <div class="hotels-section" id="hotelsSection">
+                <!-- Здесь будут динамически добавляться отели -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно способов оплаты -->
+<div class="payment-modal-overlay" id="paymentModal">
+    <div class="payment-modal-container">
+        <div class="payment-modal-close" id="closePaymentModal">&times;</div>
+        
+        <div class="payment-content">
+            <!-- Заголовок в левом углу -->
+            <h1 class="payment-title">Способы оплаты</h1>
+            
+            <!-- 3 контейнера с логотипами -->
+            <div class="payment-methods-row">
+                <div class="payment-method-logo" id="mastercardLogo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" 
+                         alt="MasterCard" class="logo-image mastercard-image">
+                </div>
+                
+                <div class="payment-method-logo" id="mirLogo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Mir-logo.SVG.svg/1024px-Mir-logo.SVG.svg.png" 
+                         alt="МИР" class="logo-image mir-image">
+                </div>
+                
+                <div class="payment-method-logo active" id="visaLogo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" 
+                         alt="Visa" class="logo-image visa-image">
+                </div>
+            </div>
+            
+            <!-- Сумма оплаты -->
+            <div class="amount-section">
+                <div class="amount-left">
+                    <div class="amount-label">Сумма оплата</div>
+                    <div class="amount-value" id="paymentAmount">8.000 ₽</div>
+                </div>
+                <button class="change-btn" id="changeAmountBtn">Изменить</button>
+            </div>
+            
+            <!-- Форма оплаты -->
+            <form class="payment-form" id="paymentForm">
+                <!-- Номер карты с иконкой -->
+                <div class="form-group card-number-group">
+                    <div class="form-columns">
+                        <div class="card-input-wrapper">
+                            <input type="text" id="cardNumber" class="form-input card-number-input" 
+                                   placeholder="Номер карты" maxlength="19" pattern="[0-9\s]{13,19}" required>
+                            <div class="card-type-badge" id="cardTypeBadge">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" 
+                                     alt="Visa" class="badge-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Имя на карте -->
+                <div class="form-group">
+                    <input type="text" id="cardName" class="form-input" 
+                           placeholder="Имя на карте" required>
+                </div>
+                
+                <!-- Срок действия и CVC/CVV с вопросиком -->
+                <div class="form-group combined-group">
+                    <div class="combined-inputs-with-help">
+                        <div class="expiry-cvc-container">
+                            <input type="text" id="cardExpiry" class="form-input expiry-input" 
+                                   placeholder="ММ/ГГ" maxlength="5" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" required>
+                            <div class="field-separator">/</div>
+                            <div class="cvc-with-help">
+                                <input type="password" id="cardCvc" class="form-input cvc-input" 
+                                       placeholder="CVC/CVV" maxlength="3" pattern="[0-9]{3}" required>
+                                <div class="cvc-help" id="cvcHelpBtn">
+                                    <span>?</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Кнопка оплаты -->
+                <div class="pay-button-container">
+                    <button type="submit" class="pay-button" id="payButton">
+                        <span class="pay-text">Оплатить</span>
+                        <span class="pay-amount" id="payButtonAmount">8.000 ₽</span>
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Сохраненные карты -->
+            <div class="saved-cards-section" id="savedCardsSection">
+                <h3 class="saved-cards-title">Сохраненные карты</h3>
+                <div class="no-saved-cards" id="noSavedCards">
+                    <i class="fas fa-credit-card"></i>
+                    <p>У вас нет сохраненных карт</p>
+                </div>
+                <div class="saved-cards-list" id="savedCardsList">
+                    <!-- Карты будут добавляться динамически -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно выбора городов для "Туда" и "Обратно" -->
+<div class="cities-selection-modal-overlay" id="citiesSelectionModal">
+    <div class="cities-selection-container">
+        <div class="header-section">
+            <h1 class="cities-title" id="citiesSelectionTitle">Город</h1>
+            <button class="cities-modal-close" id="closeCitiesSelectionModal">&times;</button>
+        </div>
+        <div class="title-divider"></div>
+        
+        <div class="cities-list">
+            <div class="city-item">
+                <div class="city-name">Санкт-Петербург</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Москва</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Владивосток</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Самара</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Сахалин</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Тюмень</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Челябинск</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Чебоксары</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Магадан</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Новосибирск</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Екатеринбург</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Красноярск</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Казань</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Нижний Новгород</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Омск</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Ростов-на-Дону</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Уфа</div>
+                <div class="city-divider"></div>
+            </div>
+            <div class="city-item">
+                <div class="city-name">Волгоград</div>
+                <div class="city-divider last-divider"></div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    <main class="main-section">
+        <div class="container">
+            <div class="top-buttons-row">
+                <button class="gray-btn two-way-btn">
+                    <i class="fas fa-exchange-alt"></i>
+                    Двухсторонний
+                </button>
+                
+                <div class="location-btn">
+                    <div class="location-label">Откуда</div>
+                    <div class="location-content">
+                        Баратаевка
+                        <span class="location-code">ULV</span>
+                    </div>
+                </div>
+                
+                <button class="oval-arrow-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                
+                <div class="location-btn">
+                    <div class="location-label">Куда</div>
+                    <div class="location-content">
+                        Санкт-Петербург
+                        <span class="location-code">SVO</span>
+                    </div>
+                </div>
+                
+                <div class="ticket-btn">
+                    <div class="ticket-info">
+                        <div class="ticket-count">1 билет</div>
+                        <div class="ticket-class">бизнес класс</div>
+                    </div>
+                </div>
+                
+                <button class="circle-search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div class="bottom-buttons-row">
+                <button class="calendar-btn">
+                    <i class="far fa-calendar"></i>
+                </button>
+                
+                <div class="date-buttons">
+                    <button class="date-btn active">
+                        <div class="date-text">26 Февр., ULV</div>
+                        <div class="date-price">4 898Р</div>
+                    </button>
+                    
+                    <button class="date-btn">
+                        <div class="date-text">29 Янв., ULV</div>
+                        <div class="date-price">3 879Р</div>
+                    </button>
+                    
+                    <button class="date-btn">
+                        <div class="date-text">31 Дек., ULV</div>
+                        <div class="date-price">8 879Р</div>
+                    </button>
+                    
+                    <button class="date-btn">
+                        <div class="date-text">11 Янв., ULV</div>
+                        <div class="date-price">5 878Р</div>
+                    </button>
+                    
+                    <button class="date-btn">
+                        <div class="date-text">5 Марта, ULV</div>
+                        <div class="date-price">4 897Р</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <section class="flights-section">
+        <div class="container">
+            <div class="flight-card">
+                <div class="flight-card-left">
+                    <div class="airline-logo">
+                        <img src="image\image 1.png" alt="S7 Airlines">
+                    </div>
+                </div>
+                
+                <div class="flight-card-content">
+                    <div class="flight-info">
+                        <div class="flight-route">Ульяновск - Санкт-Петербург</div>
+                        <div class="flight-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="flight-time">Вылет 08:30 - Прилет 10:45</div>
+                        <div class="flight-price">8.000 ₽</div>
+                    </div>
+                    
+                    <div class="flight-details">
+                        <div class="flight-button">
+                            <span class="airport-code">ULV</span>
+                            <span class="dot">•</span>
+                            <i class="fas fa-plane flight-icon"></i>
+                            <span class="dot">•</span>
+                            <span class="airport-code">SVO</span>
+                        </div>
+                        
+                        <div class="flight-extras">
+                            <div class="luggage-icon-left">
+                                <i class="fas fa-suitcase"></i>
+                            </div>
+                            
+                            <div class="heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flight-card">
+                <div class="flight-card-left">
+                    <div class="airline-logo">
+                        <img src="image\images.png" alt="Aeroflot">
+                    </div>
+                </div>
+                
+                <div class="flight-card-content">
+                    <div class="flight-info">
+                        <div class="flight-route">Ульяновск - Санкт-Петербург</div>
+                        <div class="flight-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="flight-time">Вылет 12:45 - Прилет 15:15</div>
+                        <div class="flight-price">7.500 ₽</div>
+                    </div>
+                    
+                    <div class="flight-details">
+                        <div class="flight-button">
+                            <span class="airport-code">ULV</span>
+                            <span class="dot">•</span>
+                            <i class="fas fa-plane flight-icon"></i>
+                            <span class="dot">•</span>
+                            <span class="airport-code">LED</span>
+                        </div>
+                        
+                        <div class="flight-extras">
+                            <div class="luggage-icon-left">
+                                <i class="fas fa-suitcase"></i>
+                            </div>
+                            
+                            <div class="heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flight-card">
+                <div class="flight-card-left">
+                    <div class="airline-logo">
+                        <img src="image\images (1).png" alt="UTair">
+                    </div>
+                </div>
+                
+                <div class="flight-card-content">
+                    <div class="flight-info">
+                        <div class="flight-route">Ульяновск - Санкт-Петербург</div>
+                        <div class="flight-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="flight-time">Вылет 18:20 - Прилет 21:05</div>
+                        <div class="flight-price">6.800 ₽</div>
+                    </div>
+                    
+                    <div class="flight-details">
+                        <div class="flight-button">
+                            <span class="airport-code">ULV</span>
+                            <span class="dot">•</span>
+                            <i class="fas fa-plane flight-icon"></i>
+                            <span class="dot">•</span>
+                            <span class="airport-code">SVO</span>
+                        </div>
+                        
+                        <div class="flight-extras">
+                            <div class="luggage-icon-left no-luggage">
+                                <i class="fas fa-suitcase"></i>
+                                <i class="fas fa-slash"></i>
+                            </div>
+                            
+                            <div class="heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-arrow-down">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+    
+    <section class="hotels-section">
+        <div class="container">
+            <div class="hotel-card">
+                <div class="hotel-image">
+                    <img src="image\3db44876bf217411cdbb5b1bf54406f827d54120.png" 
+                         alt="Soluxe Hotel Moscow">
+                </div>
+                
+                <div class="hotel-content">
+                    <div class="hotel-header">
+                        <div class="hotel-info">
+                            <h3 class="hotel-name">Soluxe Hotel Moscow</h3>
+                            <div class="hotel-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-settings">
+                            <i class="fas fa-sliders-h"></i>
+                        </div>
+                    </div>
+                    
+                    <p class="hotel-description">
+                        Пятизвездочный отель с 340 номерами, включая люксы с панорамным видом на город. 
+                        Адрес: улица Вильгельма Пика, 16.
+                    </p>
+                    
+                    <div class="hotel-price-btn">
+                        15 000P - 25 000P
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hotel-card">
+                <div class="hotel-image">
+                    <img src="image\image 8.png" 
+                         alt="Cosmos Selection Moscow Arbat">
+                </div>
+                
+                <div class="hotel-content">
+                    <div class="hotel-header">
+                        <div class="hotel-info">
+                            <h3 class="hotel-name">Cosmos Selection Moscow Arbat</h3>
+                            <div class="hotel-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-settings">
+                            <i class="fas fa-sliders-h"></i>
+                        </div>
+                    </div>
+                    
+                    <p class="hotel-description">
+                        Гостиница в историческом и финансовом центре на Новом Арбате, есть завтрак и прачечная. 
+                        Адрес: улица Новый Арбат, 2.
+                    </p>
+                    
+                    <div class="hotel-price-btn">
+                        12 000P - 20 000P
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-arrow-down">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+    
+    <section class="cities-section">
+        <div class="container">
+            <h2 class="cities-title">Города по пути</h2>
+            
+            <div class="cities-cards">
+                <div class="city-card">
+                    <div class="city-image-container">
+                        <img src="image\image 12.png" 
+                             alt="Казань" class="city-image">
+                        
+                        <div class="city-image-bottom-overlay">
+                            <button class="visit-btn">Посетить</button>
+                            <div class="city-heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="city-card">
+                    <div class="city-image-container">
+                        <img src="image\image 4.png" 
+                             alt="Нижний Новгород" class="city-image">
+                        
+                        <div class="city-image-bottom-overlay">
+                            <button class="visit-btn">Посетить</button>
+                            <div class="city-heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="city-card">
+                    <div class="city-image-container">
+                        <img src="image\image 5.png" 
+                             alt="Ярославль" class="city-image">
+                        
+                        <div class="city-image-bottom-overlay">
+                            <button class="visit-btn">Посетить</button>
+                            <div class="city-heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cities-text-content">
+                <div class="city-text-card">
+                    <h3 class="city-name">Казань</h3>
+                    <p class="city-description">
+                        Столица Татарстана, город с богатой историей и культурой. 
+                        Известен Казанским Кремлем, мечетью Кул-Шариф и сочетанием 
+                        восточной и европейской архитектуры.
+                    </p>
+                </div>
+                
+                <div class="city-text-card">
+                    <h3 class="city-name">Нижний Новгород</h3>
+                    <p class="city-description">
+                        Крупный город на слиянии рек Волги и Оки. Известен своим 
+                        историческим центром, Нижегородским Кремлем и как родина 
+                        писателя Максима Горького.
+                    </p>
+                </div>
+                
+                <div class="city-text-card">
+                    <h3 class="city-name">Ярославль</h3>
+                    <p class="city-description">
+                        Один из древнейших городов России, входящий в Золотое кольцо. 
+                        Город с богатым культурным наследием, множеством церквей и 
+                        монастырей, внесенный в список Всейрного наследия ЮНЕСКО.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="friends-section">
+        <div class="container">
+            <h2 class="friends-title">Добавить друзей</h2>
+            
+            <div class="friends-search-container">
+                <div class="friends-search-label">Помск</div>
+                <div class="friends-search-box">
+                    <input type="text" class="friends-search-input" placeholder="Поиск друзей...">
+                    <button class="friends-search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="friends-cards-container">
+                <div class="friend-card">
+                    <div class="friend-card-left">
+                        <div class="friend-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="friend-info">
+                            <div class="friend-name">Пётр Иванович</div>
+                            <div class="friend-id">ID: 28500194391</div>
+                        </div>
+                    </div>
+                    <button class="friend-subscribe-btn">Подписаться</button>
+                </div>
+                
+                <div class="friend-card">
+                    <div class="friend-card-left">
+                        <div class="friend-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="friend-info">
+                            <div class="friend-name">Яна Сергеевна</div>
+                            <div class="friend-id">ID: 0083823001</div>
+                        </div>
+                    </div>
+                    <button class="friend-subscribe-btn">Подписаться</button>
+                </div>
+                
+                <div class="friend-card">
+                    <div class="friend-card-left">
+                        <div class="friend-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="friend-info">
+                            <div class="friend-name">Дарья Петровна</div>
+                            <div class="friend-id">ID: 002030194302</div>
+                        </div>
+                    </div>
+                    <button class="friend-subscribe-btn">Подписаться</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="interesting-places-section">
+        <div class="container">
+            <h2 class="places-title">Интересные места</h2>
+            
+            <div class="places-columns">
+                <div class="places-column col-1">
+                    <div class="place-item image-item">
+                        <img src="image\image 10.png" 
+                             alt="Дворы-колодцы">
+                    </div>
+                    <div class="place-item text-item text-right">
+                        <p class="place-description">Лабиринты между парадными фасадами. Ищите самый известный — "три моста в одном дворе".</p>
+                        <div class="place-actions">
+                            <button class="place-visit-btn">Посетить</button>
+                            <div class="place-heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="place-item text-item text-right">
+                        <p class="place-description">Санкт-Петербург с воды — это совсем другой город!</p>
+                        <div class="place-actions">
+                            <button class="place-visit-btn">Посетить</button>
+                            <div class="place-heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="places-column col-2">
+                    <div class="place-item text-item text-left">
+                        <p class="place-description">Четвертый в мире по величине купольный собор — шедевр архитектора Монферрана.</p>
+                        <div class="place-actions">
+                            <button class="place-visit-btn">Посетить</button>
+                            <div class="place-heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="place-item image-item">
+                        <img src="image\image 11.png" 
+                             alt="Исаакиевский собор">
+                    </div>
+                    <div class="place-item image-item">
+                        <img src="image\image 13.png" 
+                             alt="Дом Зингера">
+                    </div>
+                </div>
+                
+                <div class="places-column col-3">
+                    <div class="place-item image-item tall-image">
+                        <img src="image\image 14.png" 
+                             alt="Реки и каналы">
+                    </div>
+                    <div class="place-item text-item text-right">
+                        <p class="place-description">Легендарный Дом Зингера — первый в России книжный магазин европейского уровня. Уникальная архитектура и история.</p>
+                        <div class="place-actions">
+                            <button class="place-visit-btn">Посетить</button>
+                            <div class="place-heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="places-column col-4">
+                    <div class="place-item text-item text-left">
+                        <p class="place-description">Легендарный БДТ — сцена, где рождалась история русского театрального авангарда. Великие режиссеры и актеры.</p>
+                        <div class="place-actions">
+                            <button class="place-visit-btn">Посетить</button>
+                            <div class="place-heart-icon">
+                                <i class="far fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="place-item image-item tall-image">
+                        <img src="image\image 15.png" 
+                             alt="Большой драматический театр">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="timeline-section">
+        <div class="timeline-line"></div>
+        
+        <div class="card card-left card-1">
+            <div class="icon-container">
+                <div class="circle-icon filled"></div>
+                <div class="icon-item">
+                    <i class="fas fa-plane"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-time">10:30</div>
+                <h3 class="card-title">Прибытие в аэропорт</h3>
+                <p class="card-text">Подписание документов, прохождение паспортного контроля</p>
+            </div>
+        </div>
+        
+        <div class="card card-right card-2 white-bg">
+            <div class="icon-container">
+                <div class="circle-icon hollow"></div>
+                <div class="icon-item">
+                    <i class="fas fa-bus"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-time">11:15</div>
+                <h3 class="card-title">Трансфер из аэропорта в отель</h3>
+                <p class="card-text">Предположенный трансфер на автобусе или минивэне</p>
+            </div>
+        </div>
+        
+        <div class="card card-left card-3 white-bg">
+            <div class="icon-container">
+                <div class="circle-icon hollow"></div>
+                <div class="icon-item">
+                    <i class="fas fa-bell-concierge"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-time">12:45</div>
+                <h3 class="card-title">Заселение в отель</h3>
+                <p class="card-text">Регистрация на ресепшене, получение ключей от номера</p>
+            </div>
+        </div>
+        
+        <div class="card card-right card-4">
+            <div class="icon-container">
+                <div class="circle-icon hollow"></div>
+                <div class="icon-item">
+                    <i class="fas fa-person-running"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-time">14:30</div>
+                <h3 class="card-title">Прогулка по историческому центру</h3>
+                <p class="card-text">Посещение главной площади и набережной, осмотр достопримечательностей</p>
+            </div>
+        </div>
+        
+        <div class="card card-left card-5">
+            <div class="icon-container">
+                <div class="circle-icon hollow"></div>
+                <div class="icon-item">
+                    <i class="fas fa-landmark"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-time">16:00</div>
+                <h3 class="card-title">Посещение музея</h3>
+                <p class="card-text">Экскурсия по Национальному художественного музея</p>
+            </div>
+        </div>
+        
+        <div class="card card-right card-6 white-bg">
+            <div class="icon-container">
+                <div class="circle-icon hollow"></div>
+                <div class="icon-item">
+                    <i class="fas fa-bell-concierge"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-time">19:00</div>
+                <h3 class="card-title">Ужин в ресторане</h3>
+                <p class="card-text">Заказ ужина через официанта, отдых после экскурсий</p>
+            </div>
+        </div>
+        
+        <div class="card card-left card-7">
+            <div class="icon-container">
+                <div class="circle-icon hollow"></div>
+                <div class="icon-item">
+                    <i class="fas fa-bus"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-time">09:00</div>
+                <h3 class="card-title">Подготовка к отъезду</h3>
+                <p class="card-text">Сбор чемоданов, подготовка документов к выезду</p>
+            </div>
+        </div>
+        
+        <div class="card card-right card-8">
+            <div class="icon-container">
+                <div class="circle-icon filled"></div>
+                <div class="icon-item">
+                    <i class="fas fa-plane"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-time">11:30</div>
+                <h3 class="card-title">Трансфер в аэропорт</h3>
+                <p class="card-text">Отправление в аэропорт для обратного вылета</p>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <div class="footer-logo">
+                            <img src="image\Group 2.svg" alt="TravelHub Logo" class="footer-logo-img">
+                        </div>
+                    </div>
+                    
+                    <div class="footer-center">
+                        <div class="footer-info">
+                            <h3 class="footer-category">ИНФОРМАЦИЯ</h3>
+                            <ul class="footer-links">
+                                <li><a href="#" class="footer-link">О нас</a></li>
+                                <li><a href="#" class="footer-link">Туры</a></li>
+                                <li><a href="#" class="footer-link">Профиль</a></li>
+                                <li><a href="#" class="footer-link">Отели и билеты</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-right">
+                        <div class="footer-contacts">
+                            <h3 class="footer-category">КОНТАКТЫ</h3>
+                            <ul class="footer-links">
+                                <li><a href="mailto:journey@gmail.ru" class="footer-link">journey@gmail.ru</a></li>
+                                <li><a href="tel:88000003555" class="footer-link">8 800 000 35 55</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-social">
+                            <h3 class="footer-category">МЫ В ИНТЕРНЕТЕ</h3>
+                            <div class="social-icons">
+                                <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-copyright">
+                            <p>Все права защищены 2025 ©</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+</body>
+<script src="script.js"></script>
+</html>

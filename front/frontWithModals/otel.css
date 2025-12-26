@@ -1,0 +1,360 @@
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 320px;
+    padding: 15px;
+}
+
+.filters-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    width: 100%;
+}
+
+.filter-section {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.filter-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Заголовки на 1.5 размера больше */
+.filter-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #141937;
+}
+
+/* Заголовок цены с ценой спрата */
+.price-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.price-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #141937;
+}
+
+/* Ползунок цен */
+.slider-container {
+    position: relative;
+    height: 16px;
+    margin-top: 5px;
+    margin-bottom: 12px;
+}
+
+.slider-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    transform: translateY(-50%);
+}
+
+.slider-range {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 30%;
+    height: 5px;
+    background-color: #141937;
+    border-radius: 3px;
+    transform: translateY(-50%);
+}
+
+.slider-thumb {
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    border: 2px solid #141937;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.slider-thumb:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Любая цена */
+.any-price {
+    margin-top: 8px;
+}
+
+.any-price .checkbox-label {
+    font-size: 14px;
+    color: #141937;
+}
+
+/* Звёздность - два столбца */
+.rating-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.rating-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rating-option {
+    margin-bottom: 5px;
+}
+
+/* Тип размещения */
+.accommodation-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Удобства в номере */
+.amenities-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Услуги отеля */
+.hotel-services-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Чекбоксы */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #141937;
+    transition: color 0.2s;
+}
+
+.checkbox-label:hover {
+    color: #141937;
+    opacity: 0.8;
+}
+
+.custom-checkbox {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #c0c0c0;
+    margin-right: 10px;
+    position: relative;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    border-radius: 4px;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"]:checked + .checkbox-label .custom-checkbox {
+    background-color: #141937;
+    border-color: #141937;
+}
+
+input[type="checkbox"]:checked + .checkbox-label .custom-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+}
+
+/* Расстояние от центра с ползунком */
+.distance-slider-container {
+    position: relative;
+    height: 16px;
+    margin-top: 5px;
+    margin-bottom: 8px;
+}
+
+.distance-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    transform: translateY(-50%);
+}
+
+.distance-range {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 60%;
+    height: 5px;
+    background-color: #141937;
+    border-radius: 3px;
+    transform: translateY(-50%);
+}
+
+.distance-thumb {
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    border: 2px solid #141937;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.distance-thumb:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.distance-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.distance-label {
+    font-size: 13px;
+    color: #141937;
+}
+
+.distance-label.left {
+    margin-left: 2px;
+}
+
+.distance-label.right {
+    margin-right: 2px;
+}
+
+/* Футер с кнопкой сбросить и кнопкой показать */
+.reset-section {
+    padding-top: 15px;
+}
+
+.footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.reset-button {
+    padding: 10px 18px;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    color: #141937;
+    font-weight: 600;
+    font-size: 10px;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.2s;
+    text-align: center;
+    flex: 1;
+}
+
+.reset-button:hover {
+    background-color: #e8eaf6;
+    border-color: #141937;
+}
+
+.show-button {
+    padding: 10px 18px;
+    background-color: #141937;
+    border: 1px solid #141937;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 10px;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.2s;
+    text-align: center;
+    flex: 1;
+}
+
+.show-button:hover {
+    background-color: #0d1125;
+    border-color: #0d1125;
+}
+
+.hotels-count {
+    font-weight: 700;
+}
+
+/* Адаптивность */
+@media (max-width: 350px) {
+    .container {
+        padding: 10px;
+        max-width: 280px;
+    }
+    
+    .filters-card {
+        padding: 15px;
+    }
+    
+    .filter-title {
+        font-size: 16px;
+    }
+    
+    .checkbox-label {
+        font-size: 13px;
+    }
+    
+    .rating-grid {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .footer-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

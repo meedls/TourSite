@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
+from django.db import models
 from .models import User, Friendship
 from .forms import UserRegistrationForm, UserLoginForm
 
@@ -69,6 +71,17 @@ def profile_view(request):
 @login_required
 def profile_edit(request):
     """Редактирование профиля"""
+    if request.method == 'POST':
+        user = request.user
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        username = request.POST.get('username')
+        if username:
+            user.username = username
+        user.save()
+        messages.success(request, 'Профиль обновлён')
+        return redirect('users:profile')
     return render(request, 'users/profile_edit.html')
 
 
@@ -93,3 +106,60 @@ def friend_add(request, user_id):
     friend = get_object_or_404(User, id=user_id)
     Friendship.objects.get_or_create(user=request.user, friend=friend)
     return redirect('users:friends_list')
+
+
+def api_users(request):
+    """JSON список пользователей (поиск по username/first_name/last_name)"""
+    q = request.GET.get('q', '').strip()
+    qs = User.objects.all()
+    if q:
+        qs = qs.filter(
+            models.Q(username__icontains=q) |
+            models.Q(first_name__icontains=q) |
+            models.Q(last_name__icontains=q)
+        )
+    data = [
+        {
+            'id': u.id,
+            'username': u.username,
+            'first_name': u.first_name,
+            'last_name': u.last_name,
+        } for u in qs[:50]
+    ]
+    return JsonResponse({'users': data})
+
+
+def api_user_detail(request, pk):
+    """JSON данные пользователя"""
+    user_obj = get_object_or_404(User, pk=pk)
+    data = {
+        'id': user_obj.id,
+        'username': user_obj.username,
+        'first_name': user_obj.first_name,
+        'last_name': user_obj.last_name,
+        'email': user_obj.email,
+        'date_joined': user_obj.date_joined.strftime('%d.%m.%Y'),
+    }
+    return JsonResponse(data)
+
+
+@login_required
+def api_profile(request):
+    """JSON получение/обновление профиля"""
+    user = request.user
+    if request.method == 'POST':
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        username = request.POST.get('username')
+        if username:
+            user.username = username
+        user.save()
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({
+        'id': user.id,
+        'username': user.username,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'email': user.email,
+    })

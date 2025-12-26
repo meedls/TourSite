@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="regestrasion.css">
+</head>
+<body>
+    <div class="registration-container">
+        <h1 class="registration-title">Регистрация</h1>
+        
+        <form id="registrationForm">
+            <div class="form-group">
+                <input type="email" 
+                       id="email" 
+                       class="form-input" 
+                       placeholder="Email*"
+                       required
+                       autocomplete="email">
+            </div>
+            
+            <div class="form-group">
+                <div class="password-container">
+                    <input type="password" 
+                           id="password" 
+                           class="form-input" 
+                           placeholder="Пароль"
+                           autocomplete="new-password">
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        👁️
+                    </button>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button type="submit" class="next-button" id="nextBtn">
+                    Далее →
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

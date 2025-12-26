@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фильтр перелетов</title>
+    <link rel="stylesheet" href="perelet.css">
+</head>
+<body>
+    <div class="container">
+        <div class="filters-card">
+            
+            <!-- Цена -->
+            <div class="filter-section">
+                <div class="price-header">
+                    <h2 class="filter-title">Цена</h2>
+                    <div class="price-value">5.000 ₽</div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-track"></div>
+                    <div class="slider-range" style="left: 0%; right: 20%;"></div>
+                    <div class="slider-thumb" style="left: 80%;"></div>
+                </div>
+                <div class="any-price">
+                    <input type="checkbox" id="any-price" checked>
+                    <label for="any-price" class="checkbox-label">
+                        <span class="custom-checkbox"></span>
+                        Любая
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Авиакомпании -->
+            <div class="filter-section">
+                <h2 class="filter-title">Авиакомпания</h2>
+                <div class="airline-options">
+                    <div class="airline-option">
+                        <input type="checkbox" id="s7" checked>
+                        <label for="s7" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            S7 Airlines
+                        </label>
+                    </div>
+                    <div class="airline-option">
+                        <input type="checkbox" id="utair" checked>
+                        <label for="utair" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            UTair
+                        </label>
+                    </div>
+                    <div class="airline-option">
+                        <input type="checkbox" id="pobeda" checked>
+                        <label for="pobeda" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Победа
+                        </label>
+                    </div>
+                    <div class="airline-option">
+                        <input type="checkbox" id="aeroflot" checked>
+                        <label for="aeroflot" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Аэрофлот
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Время вылета -->
+            <div class="filter-section">
+                <h2 class="filter-title">Время вылета</h2>
+                <div class="time-options">
+                    <div class="time-option">
+                        <input type="checkbox" id="morning" checked>
+                        <label for="morning" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Утро (06:00–12:00)
+                        </label>
+                    </div>
+                    <div class="time-option">
+                        <input type="checkbox" id="day" checked>
+                        <label for="day" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            День (12:00–18:00)
+                        </label>
+                    </div>
+                    <div class="time-option">
+                        <input type="checkbox" id="evening" checked>
+                        <label for="evening" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Вечер (18:00–00:00)
+                        </label>
+                    </div>
+                    <div class="time-option">
+                        <input type="checkbox" id="night" checked>
+                        <label for="night" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Ночь (00:00–06:00)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Пересадки -->
+            <div class="filter-section">
+                <h2 class="filter-title">Пересадки</h2>
+                <div class="transfer-options">
+                    <div class="transfer-option">
+                        <input type="checkbox" id="no-transfer" checked>
+                        <label for="no-transfer" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Без пересадок
+                        </label>
+                    </div>
+                    <div class="transfer-option">
+                        <input type="checkbox" id="one-transfer" checked>
+                        <label for="one-transfer" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            1 пересадка
+                        </label>
+                    </div>
+                    <div class="transfer-option">
+                        <input type="checkbox" id="two-transfer">
+                        <label for="two-transfer" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            2 пересадки
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Багаж -->
+            <div class="filter-section">
+                <h2 class="filter-title">Багаж</h2>
+                <div class="luggage-options">
+                    <div class="luggage-option">
+                        <input type="checkbox" id="with-luggage" checked>
+                        <label for="with-luggage" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            С багажом
+                        </label>
+                    </div>
+                    <div class="luggage-option">
+                        <input type="checkbox" id="without-luggage">
+                        <label for="without-luggage" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Без багажа
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Кнопка сбросить и кнопка найдено -->
+            <div class="filter-section reset-section">
+                <div class="footer-controls">
+                    <button class="reset-button">
+                        Сбросить
+                    </button>
+                    <button class="found-button">
+                        Найдено <span class="flights-count">(7)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

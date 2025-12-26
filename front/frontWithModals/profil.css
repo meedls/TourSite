@@ -1,0 +1,256 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.profile-container {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 500px;
+    padding: 24px;
+    position: relative;
+    padding-bottom: 70px;
+}
+
+/* Шапка профиля */
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px; /* Уменьшено с 30px */
+}
+
+.profile-info {
+    display: flex;
+    align-items: flex-start;
+}
+
+.avatar {
+    margin-right: 16px;
+}
+
+.avatar i {
+    font-size: 64px;
+    color: #4a6cf7;
+}
+
+.user-details h1 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.user-details p {
+    font-size: 14px;
+    color: #777;
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #666;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.settings-btn:hover {
+    background-color: #f0f0f0;
+}
+
+/* Секции */
+.section {
+    margin-bottom: 18px; /* Уменьшено с 24px */
+}
+
+.section-title {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 12px; /* Уменьшено с 16px */
+}
+
+.subsection-title {
+    font-size: 16px;
+    color: #555;
+    font-weight: 600;
+    margin: 0; /* Добавлено для устранения отступов */
+}
+
+.bookings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; /* Уменьшено с 20px */
+}
+
+.count {
+    color: #4a6cf7;
+    font-weight: 600;
+}
+
+.details-btn {
+    background-color: #141937;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.details-btn:hover {
+    background-color: #3a5ce5;
+}
+
+/* Информационные элементы */
+.info-section {
+    margin-bottom: 8px; /* Уменьшено с 10px */
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0; /* Уменьшено с 16px */
+}
+
+.info-content h3 {
+    font-size: 16px;
+    color: #444;
+    font-weight: 600;
+    margin: 0; /* Добавлено для устранения отступов */
+}
+
+.arrow-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #999;
+    cursor: pointer;
+    padding: 6px; /* Уменьшено с 8px */
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.arrow-btn:hover {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+/* Разделительные полосы */
+.divider-after-cities {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 8px 0 18px 0; /* Уменьшено с 10px 0 24px 0 */
+}
+
+.divider-after-subscribers {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 8px 0 18px 0; /* Уменьшено с 10px 0 24px 0 */
+}
+
+/* Новая кнопка выхода */
+.logout-section {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.logout-btn {
+    background-color: #141937;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(74, 108, 247, 0.3);
+}
+
+.logout-btn i {
+    margin-right: 8px;
+}
+
+.logout-btn:hover {
+    background-color: #3a5ce5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 108, 247, 0.4);
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 16px;
+        padding-bottom: 65px;
+    }
+    
+    .profile-header {
+        margin-bottom: 20px;
+    }
+    
+    .avatar i {
+        font-size: 56px;
+    }
+    
+    .user-details h1 {
+        font-size: 20px;
+    }
+    
+    .section-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    
+    .section {
+        margin-bottom: 15px;
+    }
+    
+    .bookings-header {
+        margin-bottom: 12px;
+    }
+    
+    .info-item {
+        padding: 10px 0;
+    }
+    
+    .divider-after-cities,
+    .divider-after-subscribers {
+        margin: 6px 0 15px 0;
+    }
+    
+    .logout-section {
+        left: 16px;
+        bottom: 16px;
+    }
+    
+    .logout-btn {
+        padding: 9px 16px;
+        font-size: 13px;
+    }
+}

@@ -15,126 +15,116 @@
             <div id="earth-container" class="earth-container"></div>
         </div>
 
-        <nav class="top-nav">
-            <div class="logo">
-                <a href="{% url 'tours:index' %}">
-                    <img src="{% static 'images/Group 3 — копия.svg' %}" alt="Логотип">
-                </a>
-            </div>
-
-            <ul class="nav-links">
-                <li><a href="{% url 'tours:index' %}">Главная</a></li>
-                <li><a href="{% url 'tours:tour_create' %}" class="active">Туры</a></li>
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'users:friends_list' %}">Друзья</a></li>
-                    <li><a href="{% url 'users:profile' %}">Профиль</a></li>
-                {% endif %}
-            </ul>
-
-            {% if user.is_authenticated %}
-                <a href="{% url 'users:logout' %}" class="login-btn">Выход</a>
-            {% else %}
-                <a href="{% url 'users:login' %}" class="login-btn">Вход</a>
-            {% endif %}
-        </nav>
-
-        <div class="direction-buttons">
-            <div class="direction-btn city-btn">
-                <span class="btn-text">Город</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-
-            <div class="right-buttons">
-                <div class="direction-btn to-btn">
-                    <span class="btn-text">Туда</span>
-                    <i class="fas fa-chevron-down"></i>
+        <div class="container header-container">
+            <nav class="nav">
+                <div class="logo">
+                    <a href="{% url 'tours:index' %}">
+                        <img src="{% static 'images/Group 2.svg' %}" alt="TravelHub Logo" class="logo-img">
+                    </a>
                 </div>
 
-                <span class="dash">—</span>
+                <ul class="nav-menu">
+                    <li><a href="{% url 'tours:index' %}" class="nav-link">Главная</a></li>
+                    <li>
+                        <a href="{% url 'tours:tour_create' %}" class="nav-link active"
+                           {% if not user.is_authenticated %}data-requires-auth="true"{% endif %}>
+                            Туры
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li><a href="#" class="nav-link open-friends-modal">Друзья</a></li>
+                        <li><a href="#" class="nav-link open-profile-modal">Профиль</a></li>
+                    {% else %}
+                        <li><a href="#" class="nav-link open-friends-modal" data-requires-auth="true">Друзья</a></li>
+                    {% endif %}
+                </ul>
 
-                <div class="direction-btn back-btn">
-                    <span class="btn-text">Обратно</span>
-                    <i class="fas fa-chevron-down"></i>
+                <div>
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'users:login' %}" class="btn-login open-auth-modal" data-mode="login">Вход</a>
+                    {% endif %}
                 </div>
-            </div>
-        </div>
-
-        <div class="next-btn-container">
-            <button class="next-btn">Далее</button>
+                <div class="nav-line"></div>
+            </nav>
         </div>
     </header>
 
     <main class="main-section">
         <div class="container">
-            <div class="top-buttons-row">
-                <button class="gray-btn two-way-btn">
+            <form id="flight-filters-form" method="get" class="flight-filters-form">
+                <input type="hidden" name="roundtrip" id="filter-roundtrip" value="{{ roundtrip|yesno:'1,0' }}">
+                <input type="hidden" name="from_city" id="filter-from" value="{{ from_city_id }}">
+                <input type="hidden" name="to_city" id="filter-to" value="{{ to_city_id }}">
+                <input type="hidden" name="class_type" id="filter-class" value="{{ class_type }}">
+                <input type="hidden" name="passengers" id="filter-passengers" value="{{ passengers }}">
+                <input type="hidden" name="date" id="filter-date" value="{{ date_str }}">
+                <input type="hidden" name="price_min" id="filter-price-min" value="{{ price_min|default:'' }}">
+                <input type="hidden" name="price_max" id="filter-price-max" value="{{ price_max|default:'' }}">
+                <input type="hidden" name="airlines" id="filter-airlines" value="{{ airlines|default:'' }}">
+                <input type="hidden" name="departure_time" id="filter-departure-time" value="{{ departure_time|default:'' }}">
+                <input type="hidden" name="transfers" id="filter-transfers" value="{{ transfers|default:'' }}">
+                <input type="hidden" name="luggage" id="filter-luggage" value="{{ luggage|default:'' }}">
+                <input type="hidden" name="hotel_price_min" id="filter-hotel-price-min" value="{{ hotel_price_min|default:'' }}">
+                <input type="hidden" name="hotel_price_max" id="filter-hotel-price-max" value="{{ hotel_price_max|default:'' }}">
+                <input type="hidden" name="hotel_ratings" id="filter-hotel-ratings" value="{{ hotel_ratings|default:'' }}">
+            </form>
+
+            <div class="direction-buttons">
+                <button type="button" class="gray-btn two-way-btn" id="btn-roundtrip" aria-pressed="{{ roundtrip|yesno:'true,false' }}">
                     <i class="fas fa-exchange-alt"></i>
                     Двухсторонний
                 </button>
 
-                <div class="location-btn">
+                <div class="location-btn from-btn" id="btn-from">
                     <div class="location-label">Откуда</div>
                     <div class="location-content">
-                        Баратаевка
-                        <span class="location-code">ULV</span>
+                        {{ selected_from_city.name|default:"Выберите" }}
+                        {% if selected_from_city %}<span class="location-code">{{ selected_from_city.country }}</span>{% endif %}
                     </div>
                 </div>
 
-                <button class="oval-arrow-btn">
+                <button class="oval-arrow-btn" type="button" id="btn-swap">
                     <i class="fas fa-arrow-left"></i>
                     <i class="fas fa-arrow-right"></i>
                 </button>
 
-                <div class="location-btn">
+                <div class="location-btn to-btn" id="btn-to">
                     <div class="location-label">Куда</div>
                     <div class="location-content">
-                        Санкт-Петербург
-                        <span class="location-code">SVO</span>
+                        {{ selected_to_city.name|default:"Выберите" }}
+                        {% if selected_to_city %}<span class="location-code">{{ selected_to_city.country }}</span>{% endif %}
                     </div>
                 </div>
 
-                <div class="ticket-btn">
+                <div class="ticket-btn" id="btn-ticket">
                     <div class="ticket-info">
-                        <div class="ticket-count">1 билет</div>
-                        <div class="ticket-class">бизнес класс</div>
+                        <div class="ticket-count">{{ passengers }} билет{{ passengers|pluralize:"а," }}</div>
+                        <div class="ticket-class">{{ class_label }}</div>
                     </div>
                 </div>
 
-                <button class="circle-search-btn">
+                <button class="circle-search-btn" type="button" id="btn-search">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
 
-            <div class="bottom-buttons-row">
-                <button class="calendar-btn">
-                    <i class="far fa-calendar"></i>
+            <div class="top-buttons-row filters-row">
+                <button class="calendar-btn filter-btn" type="button" id="btn-filter">
+                    <i class="fas fa-filter"></i>
                 </button>
 
                 <div class="date-buttons">
-                    <button class="date-btn active">
-                        <div class="date-text">26 Февр., ULV</div>
-                        <div class="date-price">4 898Р</div>
+                    {% for d in date_options %}
+                    {% with d.date|stringformat:"Y-m-d" as dstr %}
+                    <button class="date-btn {% if dstr == date_str %}active{% endif %} {% if not d.has_flights %}disabled-date{% endif %}"
+                            type="button"
+                            data-date="{{ dstr }}"
+                            data-disabled="{{ d.has_flights|yesno:'false,true' }}">
+                        <div class="date-text">{{ d.date|date:"d M" }}</div>
+                        <div class="date-price">{% if d.has_flights %}доступно{% else %}нет рейсов{% endif %}</div>
                     </button>
-
-                    <button class="date-btn">
-                        <div class="date-text">29 Янв., ULV</div>
-                        <div class="date-price">3 879Р</div>
-                    </button>
-
-                    <button class="date-btn">
-                        <div class="date-text">31 Дек., ULV</div>
-                        <div class="date-price">8 879Р</div>
-                    </button>
-
-                    <button class="date-btn">
-                        <div class="date-text">11 Янв., ULV</div>
-                        <div class="date-price">5 878Р</div>
-                    </button>
-
-                    <button class="date-btn">
-                        <div class="date-text">5 Марта, ULV</div>
-                        <div class="date-price">4 897Р</div>
-                    </button>
+                    {% endwith %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -144,127 +134,427 @@
         <div class="container" id="flights-container">
             {% if flights %}
                 {% for flight in flights %}
-                <div class="flight-card {% if forloop.counter > 3 %}flight-hidden{% endif %}">
-                    <div class="flight-card-left">
-                        <div class="airline-logo">
+                <div class="flight-card selectable-card {% if forloop.counter > 3 %}flight-hidden{% endif %}"
+                     data-flight-id="{{ flight.id }}"
+                     data-flight-route="{{ flight.from_city.name }} - {{ flight.to_city.name }}"
+                     data-flight-time="Вылет {{ flight.departure_time|date:'H:i' }} - Прилет {{ flight.arrival_time|date:'H:i' }}"
+                     data-flight-price="{{ flight.price }} ₽">
+                <div class="flight-card-left">
+                    <div class="airline-logo">
                             {% if flight.airline.logo %}
                                 <img src="{{ flight.airline.logo.url }}" alt="{{ flight.airline.name }}">
                             {% else %}
                                 {% cycle 'images/image 10.png' 'images/image 11.png' 'images/image 12.png' 'images/image 14.png' as flight_placeholder %}
                                 <img src="{% static flight_placeholder %}" alt="{{ flight.airline.name }}">
                             {% endif %}
-                        </div>
                     </div>
+                </div>
 
-                    <div class="flight-card-content">
-                        <div class="flight-info">
+                <div class="flight-card-content">
+                    <div class="flight-info">
                             <div class="flight-route">{{ flight.from_city.name }} - {{ flight.to_city.name }}</div>
-                            <div class="flight-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                        <div class="flight-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
                                 <i class="far fa-star"></i>
-                            </div>
+                        </div>
                             <div class="flight-time">
                                 Вылет {{ flight.departure_time|date:"H:i" }} - Прилет {{ flight.arrival_time|date:"H:i" }}
                             </div>
                             <div class="flight-price">{{ flight.price }} ₽</div>
-                        </div>
+                    </div>
 
-                        <div class="flight-details">
+                    <div class="flight-details">
                             <a href="{% url 'flights:flight_detail' flight.pk %}" class="flight-button">
                                 <span class="airport-code">{{ flight.from_city.name|slice:":3"|upper }}</span>
-                                <span class="dot">•</span>
-                                <i class="fas fa-plane flight-icon"></i>
-                                <span class="dot">•</span>
+                            <span class="dot">•</span>
+                            <i class="fas fa-plane flight-icon"></i>
+                            <span class="dot">•</span>
                                 <span class="airport-code">{{ flight.to_city.name|slice:":3"|upper }}</span>
                             </a>
 
-                            <div class="flight-extras">
-                                <div class="luggage-icon-left">
-                                    <i class="fas fa-suitcase"></i>
-                                </div>
+                        <div class="flight-extras">
+                            <div class="luggage-icon-left">
+                                <i class="fas fa-suitcase"></i>
+                            </div>
 
-                                <div class="heart-icon">
-                                    <i class="far fa-heart"></i>
-                                </div>
+                            <div class="heart-icon">
+                                <i class="far fa-heart"></i>
                             </div>
                         </div>
+                            <button type="button" class="select-btn select-flight">Добавить в тур</button>
                     </div>
                 </div>
+            </div>
                 {% endfor %}
             {% else %}
                 <p class="no-flights-placeholder">Пока нет рейсов.</p>
             {% endif %}
-        </div>
+                </div>
 
         {% if flights and flights|length > 3 %}
         <div class="flights-toggle">
             <button type="button" id="toggle-flights-btn" class="toggle-flights-btn">
                 Ещё
-            </button>
-        </div>
+                        </button>
+                            </div>
         {% endif %}
 
         <div class="section-arrow-down">
             <i class="fas fa-chevron-down"></i>
-        </div>
+                            </div>
     </section>
 
+    <!-- Попапы фильтров -->
+    <div class="popup-overlay" id="popup-from">
+        <div class="popup">
+            <div class="popup-title">Выберите город отправления</div>
+            <button type="button" class="popup-item popup-reset from-reset" data-id="">Все города</button>
+            <ul class="popup-list">
+                {% for city in from_cities %}
+                    <li data-id="{{ city.id }}" class="popup-item from-option">{{ city.name }} ({{ city.country }})</li>
+                {% endfor %}
+            </ul>
+                    </div>
+                </div>
+
+    <div class="popup-overlay" id="popup-to">
+        <div class="popup">
+            <div class="popup-title">Выберите город прибытия</div>
+            <button type="button" class="popup-item popup-reset to-reset" data-id="">Все города</button>
+            <ul class="popup-list">
+                {% for city in to_cities %}
+                    <li data-id="{{ city.id }}" class="popup-item to-option">{{ city.name }} ({{ city.country }})</li>
+                {% endfor %}
+            </ul>
+                        </div>
+                    </div>
+
+    <div class="popup-overlay" id="popup-ticket">
+        <div class="popup">
+            <div class="popup-title">Билеты и класс</div>
+            <div class="ticket-popup-row">
+                <label>Количество</label>
+                <input type="number" id="popup-passengers" min="1" max="9" value="{{ passengers }}">
+                            </div>
+            <div class="ticket-popup-row">
+                <label>Класс</label>
+                <select id="popup-class">
+                    <option value="" {% if not class_type %}selected{% endif %}>Все классы</option>
+                    <option value="economy" {% if class_type == 'economy' %}selected{% endif %}>Эконом</option>
+                    <option value="business" {% if class_type == 'business' %}selected{% endif %}>Бизнес</option>
+                    <option value="first" {% if class_type == 'first' %}selected{% endif %}>Первый класс</option>
+                </select>
+                            </div>
+            <div class="ticket-popup-actions">
+                <button type="button" class="popup-close">Отмена</button>
+                <button type="button" class="popup-apply" id="popup-ticket-apply">Применить</button>
+                </div>
+            </div>
+        </div>
+
+    <!-- Filter modal -->
+    <div class="filter-overlay popup-overlay" id="popup-filter" style="display:none;">
+        <div class="filter-modal">
+            <button class="popup-close filter-close" type="button">&times;</button>
+            <div class="filters-card">
+                <!-- Цена -->
+                <div class="filter-section">
+                    <div class="price-header">
+                        <h2 class="filter-title">Цена</h2>
+                        <div class="price-value" id="price-display">{{ price_max_default|default:50000|floatformat:0 }} ₽</div>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-range" id="slider-range"></div>
+                        <div class="slider-thumb" id="slider-thumb"></div>
+                    </div>
+                    <div class="any-price">
+                        <input type="checkbox" id="any-price" {% if not price_min and not price_max %}checked{% endif %}>
+                        <label for="any-price" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Любая
+                        </label>
+                    </div>
+                    <input type="hidden" id="price-min-value" value="{{ price_min_default|default:0 }}">
+                    <input type="hidden" id="price-max-value" value="{{ price_max|default:price_max_default|default:50000 }}">
+                </div>
+                
+                <!-- Авиакомпании -->
+                <div class="filter-section">
+                    <h2 class="filter-title">Авиакомпания</h2>
+                    <div class="airline-options">
+                        {% for airline in airlines_list %}
+                        <div class="airline-option">
+                            <input type="checkbox" id="airline-{{ airline.id }}" class="airline-checkbox" value="{{ airline.id }}" 
+                                   {% if not selected_airline_ids or airline.id in selected_airline_ids %}checked{% endif %}>
+                            <label for="airline-{{ airline.id }}" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                {{ airline.name }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Время вылета -->
+                <div class="filter-section">
+                    <h2 class="filter-title">Время вылета</h2>
+                    <div class="time-options">
+                        <div class="time-option">
+                            <input type="checkbox" id="morning" class="time-checkbox" value="morning" 
+                                   {% if not selected_departure_times or 'morning' in selected_departure_times %}checked{% endif %}>
+                            <label for="morning" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                Утро (06:00–12:00)
+                            </label>
+                        </div>
+                        <div class="time-option">
+                            <input type="checkbox" id="day" class="time-checkbox" value="day" 
+                                   {% if not selected_departure_times or 'day' in selected_departure_times %}checked{% endif %}>
+                            <label for="day" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                День (12:00–18:00)
+                            </label>
+                        </div>
+                        <div class="time-option">
+                            <input type="checkbox" id="evening" class="time-checkbox" value="evening" 
+                                   {% if not selected_departure_times or 'evening' in selected_departure_times %}checked{% endif %}>
+                            <label for="evening" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                Вечер (18:00–00:00)
+                            </label>
+                        </div>
+                        <div class="time-option">
+                            <input type="checkbox" id="night" class="time-checkbox" value="night" 
+                                   {% if not selected_departure_times or 'night' in selected_departure_times %}checked{% endif %}>
+                            <label for="night" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                Ночь (00:00–06:00)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Пересадки -->
+                <div class="filter-section">
+                    <h2 class="filter-title">Пересадки</h2>
+                    <div class="transfer-options">
+                        <div class="transfer-option">
+                            <input type="checkbox" id="no-transfer" class="transfer-checkbox" value="0" checked>
+                            <label for="no-transfer" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                Без пересадок
+                            </label>
+                        </div>
+                        <div class="transfer-option">
+                            <input type="checkbox" id="one-transfer" class="transfer-checkbox" value="1" checked>
+                            <label for="one-transfer" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                1 пересадка
+                            </label>
+                        </div>
+                        <div class="transfer-option">
+                            <input type="checkbox" id="two-transfer" class="transfer-checkbox" value="2">
+                            <label for="two-transfer" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                2 пересадки
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Багаж -->
+                <div class="filter-section">
+                    <h2 class="filter-title">Багаж</h2>
+                    <div class="luggage-options">
+                        <div class="luggage-option">
+                            <input type="checkbox" id="with-luggage" class="luggage-checkbox" value="with" checked>
+                            <label for="with-luggage" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                С багажом
+                            </label>
+                        </div>
+                        <div class="luggage-option">
+                            <input type="checkbox" id="without-luggage" class="luggage-checkbox" value="without">
+                            <label for="without-luggage" class="checkbox-label">
+                                <span class="custom-checkbox"></span>
+                                Без багажа
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Кнопка сбросить и кнопка найдено -->
+                <div class="filter-section reset-section">
+                    <div class="footer-controls">
+                        <button type="button" class="reset-button" id="filter-reset">
+                            Сбросить
+                        </button>
+                        <button type="button" class="found-button" id="filter-apply">
+                            Найдено <span class="flights-count" id="flights-count">({{ flights|length }})</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hotel Filter modal -->
+    <div class="filter-overlay popup-overlay" id="popup-hotel-filter" style="display:none;">
+        <div class="filter-modal">
+            <button class="popup-close hotel-filter-close" type="button">&times;</button>
+            <div class="filters-card">
+                <!-- Цена -->
+                <div class="filter-section">
+                    <div class="price-header">
+                        <h2 class="filter-title">Цена</h2>
+                        <div class="price-value" id="hotel-price-display">{{ hotel_price_max_default|default:10000|floatformat:0 }} ₽</div>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-range" id="hotel-slider-range"></div>
+                        <div class="slider-thumb" id="hotel-slider-thumb"></div>
+                    </div>
+                    <div class="any-price">
+                        <input type="checkbox" id="hotel-any-price" {% if not hotel_price_min and not hotel_price_max %}checked{% endif %}>
+                        <label for="hotel-any-price" class="checkbox-label">
+                            <span class="custom-checkbox"></span>
+                            Любая
+                        </label>
+                    </div>
+                    <input type="hidden" id="hotel-price-min-value" value="{{ hotel_price_min_default|default:0 }}">
+                    <input type="hidden" id="hotel-price-max-value" value="{{ hotel_price_max|default:hotel_price_max_default|default:10000 }}">
+                </div>
+                
+                <!-- Звёздность -->
+                <div class="filter-section">
+                    <h2 class="filter-title">Звёздность</h2>
+                    <div class="rating-grid">
+                        <div class="rating-column">
+                            <div class="rating-option">
+                                <input type="checkbox" id="hotel-5-stars" class="hotel-rating-checkbox" value="5" 
+                                       {% if not selected_hotel_ratings or 5 in selected_hotel_ratings %}checked{% endif %}>
+                                <label for="hotel-5-stars" class="checkbox-label">
+                                    <span class="custom-checkbox"></span>
+                                    5 звёзд
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="checkbox" id="hotel-4-stars" class="hotel-rating-checkbox" value="4" 
+                                       {% if not selected_hotel_ratings or 4 in selected_hotel_ratings %}checked{% endif %}>
+                                <label for="hotel-4-stars" class="checkbox-label">
+                                    <span class="custom-checkbox"></span>
+                                    4 звезды
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="checkbox" id="hotel-3-stars" class="hotel-rating-checkbox" value="3" 
+                                       {% if not selected_hotel_ratings or 3 in selected_hotel_ratings %}checked{% endif %}>
+                                <label for="hotel-3-stars" class="checkbox-label">
+                                    <span class="custom-checkbox"></span>
+                                    3 звезды
+                                </label>
+                            </div>
+                        </div>
+                        <div class="rating-column">
+                            <div class="rating-option">
+                                <input type="checkbox" id="hotel-2-stars" class="hotel-rating-checkbox" value="2" 
+                                       {% if not selected_hotel_ratings or 2 in selected_hotel_ratings %}checked{% endif %}>
+                                <label for="hotel-2-stars" class="checkbox-label">
+                                    <span class="custom-checkbox"></span>
+                                    2 звезды
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="checkbox" id="hotel-no-stars" class="hotel-rating-checkbox" value="0" 
+                                       {% if not selected_hotel_ratings or 0 in selected_hotel_ratings %}checked{% endif %}>
+                                <label for="hotel-no-stars" class="checkbox-label">
+                                    <span class="custom-checkbox"></span>
+                                    Без звёзд
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Кнопка сбросить и кнопка показать -->
+                <div class="filter-section reset-section">
+                    <div class="footer-controls">
+                        <button type="button" class="reset-button" id="hotel-filter-reset">
+                            Сбросить
+                        </button>
+                        <button type="button" class="found-button" id="hotel-filter-apply">
+                            Показать <span class="hotels-count" id="hotels-count">({{ hotels|length }})</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <section class="hotels-section">
+        <div class="container">
+            <div class="hotels-header">
+                <h2 class="section-title">Отели</h2>
+                <button class="calendar-btn filter-btn" type="button" id="btn-hotel-filter">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
+        </div>
         <div class="container" id="hotels-container">
             {% if hotels %}
                 {% for hotel in hotels %}
-                <div class="hotel-card {% if forloop.counter > 2 %}hotel-hidden{% endif %}" {% if forloop.counter > 2 %}style="display:none"{% endif %}>
+                <div class="hotel-card selectable-card {% if forloop.counter > 2 %}hotel-hidden{% endif %}" {% if forloop.counter > 2 %}style="display:none"{% endif %}
+                     data-hotel-id="{{ hotel.id }}"
+                     data-hotel-name="{{ hotel.name }}"
+                     data-hotel-price="{{ hotel.price_min }}P - {{ hotel.price_max }}P">
+                <a href="{% url 'hotels:hotel_detail' hotel.pk %}" class="hotel-image-link" onclick="event.stopPropagation();">
                     <div class="hotel-image">
-                        {% if hotel.images.all %}
-                            <img src="{{ hotel.images.all.0.image.url }}" alt="{{ hotel.name }}">
-                        {% else %}
-                            {% cycle 'images/image 10.png' 'images/image 14.png' 'images/image 11.png' as hotel_placeholder %}
-                            <img src="{% static hotel_placeholder %}" alt="{{ hotel.name }}">
-                        {% endif %}
+                            {% if hotel.images.all %}
+                                <img src="{{ hotel.images.all.0.image.url }}" alt="{{ hotel.name }}">
+                            {% else %}
+                                {% cycle 'images/image 10.png' 'images/image 14.png' 'images/image 11.png' as hotel_placeholder %}
+                                <img src="{% static hotel_placeholder %}" alt="{{ hotel.name }}">
+                            {% endif %}
                     </div>
+                </a>
 
-                    <div class="hotel-content">
-                        <div class="hotel-header">
-                            <div class="hotel-info">
+                <div class="hotel-content">
+                    <div class="hotel-header">
+                        <div class="hotel-info">
                                 <h3 class="hotel-name">{{ hotel.name }}</h3>
-                                <div class="hotel-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
+                            <div class="hotel-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
                                     <i class="far fa-star"></i>
-                                </div>
                             </div>
-
-                            <a class="hotel-settings" href="{% url 'hotels:hotel_detail' hotel.pk %}" onclick="event.stopPropagation();">
-                                <i class="fas fa-sliders-h"></i>
-                            </a>
                         </div>
-
-                        <p class="hotel-description">
-                            {{ hotel.description|default:"Описание будет добавлено" }}
-                        </p>
-
-                        <a href="{% url 'hotels:hotel_detail' hotel.pk %}" class="hotel-price-btn" style="text-decoration: none; display: inline-block; cursor: pointer;">
-                            {{ hotel.price_min }}P - {{ hotel.price_max }}P
-                        </a>
                     </div>
+
+                    <p class="hotel-description">
+                            {{ hotel.description|default:"Описание будет добавлено" }}
+                    </p>
+
+                        <button type="button" class="select-btn select-hotel">Добавить в тур</button>
                 </div>
+            </div>
                 {% endfor %}
             {% else %}
                 <p class="no-hotels-placeholder">Пока нет отелей.</p>
             {% endif %}
-        </div>
+                </div>
 
         {% if hotels and hotels|length > 2 %}
         <div class="flights-toggle">
             <button type="button" id="toggle-hotels-btn" class="toggle-flights-btn">
                 Ещё
             </button>
-        </div>
+                            </div>
         {% endif %}
 
         <div class="section-arrow-down">
@@ -277,12 +567,12 @@
             <h2 class="cities-title">Города по пути</h2>
 
             <div class="cities-cards">
-                <div class="city-card">
+            <div class="city-card selectable-card" data-city-id="" data-city-name="Казань">
                     <div class="city-image-container">
                         <img src="{% static 'images/image 12.png' %}" alt="Казань" class="city-image">
 
                         <div class="city-image-bottom-overlay">
-                            <button class="visit-btn">Посетить</button>
+                        <button class="visit-btn select-city" data-city-id="" data-city-name="Казань">Посетить</button>
                             <div class="city-heart-icon">
                                 <i class="far fa-heart"></i>
                             </div>
@@ -290,12 +580,12 @@
                     </div>
                 </div>
 
-                <div class="city-card">
+            <div class="city-card selectable-card" data-city-id="" data-city-name="Нижний Новгород">
                     <div class="city-image-container">
                         <img src="{% static 'images/image 4.png' %}" alt="Нижний Новгород" class="city-image">
 
                         <div class="city-image-bottom-overlay">
-                            <button class="visit-btn">Посетить</button>
+                        <button class="visit-btn select-city" data-city-id="" data-city-name="Нижний Новгород">Посетить</button>
                             <div class="city-heart-icon">
                                 <i class="far fa-heart"></i>
                             </div>
@@ -303,12 +593,12 @@
                     </div>
                 </div>
 
-                <div class="city-card">
+            <div class="city-card selectable-card" data-city-id="" data-city-name="Ярославль">
                     <div class="city-image-container">
                         <img src="{% static 'images/image 5.png' %}" alt="Ярославль" class="city-image">
 
                         <div class="city-image-bottom-overlay">
-                            <button class="visit-btn">Посетить</button>
+                        <button class="visit-btn select-city" data-city-id="" data-city-name="Ярославль">Посетить</button>
                             <div class="city-heart-icon">
                                 <i class="far fa-heart"></i>
                             </div>
@@ -365,21 +655,24 @@
             <div class="friends-cards-container">
                 {% if friends %}
                     {% for friend in friends %}
-                    <div class="friend-card">
-                        <div class="friend-card-left">
-                            <div class="friend-avatar">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                            <div class="friend-info">
+                    <div class="friend-card selectable-card" data-friend-id="{{ friend.id }}" data-friend-name="{{ friend.first_name }} {{ friend.last_name }}{% if not friend.first_name and not friend.last_name %}{{ friend.username }}{% endif %}">
+                    <div class="friend-card-left">
+                        <div class="friend-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="friend-info">
                                 <div class="friend-name">
                                     {{ friend.first_name }} {{ friend.last_name }}
                                     {% if not friend.first_name and not friend.last_name %}{{ friend.username }}{% endif %}
-                                </div>
-                                <div class="friend-id">ID: {{ friend.id }}</div>
-                            </div>
                         </div>
-                        <a class="friend-subscribe-btn" href="{% url 'users:friend_add' friend.id %}">Подписаться</a>
+                                <div class="friend-id">ID: {{ friend.id }}</div>
                     </div>
+                </div>
+                        <div class="friend-actions">
+                            <a class="friend-subscribe-btn" href="{% url 'users:friend_add' friend.id %}">Подписаться</a>
+                            <button type="button" class="select-btn select-friend" data-friend-id="{{ friend.id }}">Добавить в тур</button>
+                        </div>
+                        </div>
                     {% endfor %}
                 {% else %}
                     <p class="no-friends-placeholder">Никого не нашли. Попробуйте другой запрос.</p>
@@ -391,6 +684,7 @@
     <section class="interesting-places-section">
         <div class="container">
             <h2 class="places-title">Интересные места</h2>
+
 
             <div class="places-columns">
                 <div class="places-column col-1">
@@ -468,121 +762,616 @@
         </div>
     </section>
 
-    <section class="timeline-section">
+    <!-- Итоговый блок конструктора -->
+    <section class="builder-final">
+        <div class="container">
+            <h2>Готовы собрать тур?</h2>
+            <p>Выберите рейсы, отели, места и друзей, затем нажмите кнопку.</p>
+            <form id="build-tour-form" method="post" action="{% url 'tours:tour_build' %}">
+                {% csrf_token %}
+                <input type="hidden" name="selected_flights" id="selected_flights">
+                <input type="hidden" name="selected_hotels" id="selected_hotels">
+                <input type="hidden" name="selected_places" id="selected_places">
+                <input type="hidden" name="selected_cities" id="selected_cities">
+                <input type="hidden" name="selected_friends" id="selected_friends">
+                <button type="submit" class="build-tour-btn" data-requires-auth="true">Создать ваш собственный тур</button>
+            </form>
+            <div id="selected-summary" class="selected-summary"></div>
+            <div id="built-preview" class="built-preview" style="display:none;">
+                <h3>Ваш собранный тур</h3>
+                <div id="built-timeline" class="timeline-section built-timeline">
         <div class="timeline-line"></div>
-
-        <div class="card card-left card-1">
-            <div class="icon-container">
-                <div class="circle-icon filled"></div>
-                <div class="icon-item">
-                    <i class="fas fa-plane"></i>
                 </div>
-            </div>
-            <div class="card-content">
-                <div class="card-time">10:30</div>
-                <h3 class="card-title">Прибытие в аэропорт</h3>
-                <p class="card-text">Подписание документов, прохождение паспортного контроля</p>
-            </div>
-        </div>
-
-        <div class="card card-right card-2 white-bg">
-            <div class="icon-container">
-                <div class="circle-icon hollow"></div>
-                <div class="icon-item">
-                    <i class="fas fa-bus"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-time">11:15</div>
-                <h3 class="card-title">Трансфер из аэропорта в отель</h3>
-                <p class="card-text">Предположенный трансфер на автобусе или минивэне</p>
-            </div>
-        </div>
-
-        <div class="card card-left card-3 white-bg">
-            <div class="icon-container">
-                <div class="circle-icon hollow"></div>
-                <div class="icon-item">
-                    <i class="fas fa-bell-concierge"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-time">12:45</div>
-                <h3 class="card-title">Заселение в отель</h3>
-                <p class="card-text">Регистрация на ресепшене, получение ключей от номера</p>
-            </div>
-        </div>
-
-        <div class="card card-right card-4">
-            <div class="icon-container">
-                <div class="circle-icon hollow"></div>
-                <div class="icon-item">
-                    <i class="fas fa-person-running"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-time">14:30</div>
-                <h3 class="card-title">Прогулка по историческому центру</h3>
-                <p class="card-text">Посещение главной площади и набережной, осмотр достопримечательностей</p>
-            </div>
-        </div>
-
-        <div class="card card-left card-5">
-            <div class="icon-container">
-                <div class="circle-icon hollow"></div>
-                <div class="icon-item">
-                    <i class="fas fa-landmark"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-time">16:00</div>
-                <h3 class="card-title">Посещение музея</h3>
-                <p class="card-text">Экскурсия по Национальному художественного музея</p>
-            </div>
-        </div>
-
-        <div class="card card-right card-6 white-bg">
-            <div class="icon-container">
-                <div class="circle-icon hollow"></div>
-                <div class="icon-item">
-                    <i class="fas fa-bell-concierge"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-time">19:00</div>
-                <h3 class="card-title">Ужин в ресторане</h3>
-                <p class="card-text">Заказ ужина через официанта, отдых после экскурсий</p>
-            </div>
-        </div>
-
-        <div class="card card-left card-7">
-            <div class="icon-container">
-                <div class="circle-icon hollow"></div>
-                <div class="icon-item">
-                    <i class="fas fa-bus"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-time">09:00</div>
-                <h3 class="card-title">Подготовка к отъезду</h3>
-                <p class="card-text">Сбор чемоданов, подготовка документов к выезду</p>
-            </div>
-        </div>
-
-        <div class="card card-right card-8">
-            <div class="icon-container">
-                <div class="circle-icon filled"></div>
-                <div class="icon-item">
-                    <i class="fas fa-plane"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-time">11:30</div>
-                <h3 class="card-title">Трансфер в аэропорт</h3>
-                <p class="card-text">Отправление в аэропорт для обратного вылета</p>
             </div>
         </div>
     </section>
+
+    <!-- Friends list modal -->
+    <div class="friends-overlay" style="display:none;">
+        <div class="friends-modal">
+            <button class="auth-close friends-close" type="button">&times;</button>
+            <h3 class="friends-title">Друзья</h3>
+            <div class="friends-search">
+                <input type="text" placeholder="Поиск по имени..." class="friends-search-input">
+                <button type="button" class="friends-search-btn">Найти</button>
+            </div>
+            <div class="friends-list" id="friends-list"></div>
+        </div>
+    </div>
+
+    <!-- Friend detail modal -->
+    <div class="friend-detail-overlay" style="display:none;">
+        <div class="friend-detail-modal">
+            <button class="auth-close friend-detail-close" type="button">&times;</button>
+            <div class="friend-detail-body">
+                <div class="friend-avatar-big"><i class="fas fa-user-circle"></i></div>
+                <div class="friend-detail-name" id="friend-name"></div>
+                <div class="friend-detail-username" id="friend-username"></div>
+                <div class="friend-detail-date" id="friend-date"></div>
+                <a class="friend-subscribe-btn" id="friend-subscribe" href="#" data-friend-id="">Подписаться</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile modal -->
+    <div class="profile-overlay" style="display:none;">
+        <div class="profile-modal">
+            <button class="auth-close profile-close" type="button">&times;</button>
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <div class="avatar"><i class="fas fa-user-circle"></i></div>
+                        <div class="user-details">
+                            <h1 class="user-name profile-user-name">—</h1>
+                            <p class="user-id profile-user-id">ID: —</p>
+                        </div>
+                    </div>
+                    <div class="settings">
+                        <button class="settings-btn" type="button"><i class="fas fa-cog"></i></button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Путешествия</h2>
+                        <div class="bookings-header">
+                            <h3 class="subsection-title">Мои бронирования <span class="count">(0)</span></h3>
+                            <button class="details-btn" type="button">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-item">
+                        <div class="info-content">
+                            <h3>Способ оплаты</h3>
+                        </div>
+                        <button class="arrow-btn" type="button"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-content">
+                            <h3>Избранные города <span class="count">(0)</span></h3>
+                        </div>
+                        <button class="arrow-btn" type="button"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="divider-after-cities"></div>
+
+                <div class="section">
+                    <h2 class="section-title">Мои друзья</h2>
+                    <div class="info-item">
+                        <div class="info-content">
+                            <h3>Друзья <span class="count">(0)</span></h3>
+                        </div>
+                        <button class="arrow-btn" type="button"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-content">
+                            <h3>Подписчики <span class="count">(0)</span></h3>
+                        </div>
+                        <button class="arrow-btn" type="button"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="divider-after-subscribers"></div>
+
+                <div class="logout-section">
+                    <a class="logout-btn open-logout-modal" href="#">Выход</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout modal -->
+    <div class="logout-overlay modal-overlay" style="display:none;">
+        <div class="logout-modal">
+            <div class="logout-panel">
+                <div class="logout-title">Выйти из аккаунта</div>
+                <div class="buttons-container">
+                    <button class="btn btn-yes" id="logout-yes">Да</button>
+                    <button class="btn btn-cancel" id="logout-cancel">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Edit modal -->
+    <div class="profile-edit-overlay" style="display:none;">
+        <div class="profile-edit-modal">
+            <button class="profile-edit-close" type="button">&times;</button>
+            <h2 class="profile-edit-title">Редактировать профиль</h2>
+            <form class="profile-form">
+                <div class="form-group">
+                    <label>Логин</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" name="first_name">
+                </div>
+                <div class="form-group">
+                    <label>Фамилия</label>
+                    <input type="text" name="last_name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email">
+                </div>
+                <button type="submit" class="auth-submit">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth modal -->
+    <div class="auth-overlay" style="display:none;">
+        <div class="auth-modal">
+            <button class="auth-close" type="button">&times;</button>
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" data-mode="login">Вход</button>
+                <button type="button" class="auth-tab" data-mode="register">Регистрация</button>
+            </div>
+
+            <form class="auth-form auth-login-form" method="post" action="{% url 'users:login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Имя пользователя</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="auth-submit">Войти</button>
+            </form>
+
+            <form class="auth-form auth-register-form" method="post" action="{% url 'users:register' %}" style="display:none;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Имя пользователя</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password1" required>
+                </div>
+                <div class="form-group">
+                    <label>Подтверждение пароля</label>
+                    <input type="password" name="password2" required>
+                </div>
+                <button type="submit" class="auth-submit">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .auth-overlay,
+        .friends-overlay,
+        .friend-detail-overlay,
+        .profile-overlay,
+        .profile-edit-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .auth-modal {
+            background: #fff;
+            border-radius: 24px;
+            padding: 26px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            position: relative;
+        }
+        .auth-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            border: none;
+            background: #f5f7fa;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            line-height: 1;
+            z-index: 10;
+        }
+        .auth-close:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+        .profile-edit-modal {
+            background: #fff;
+            border-radius: 28px;
+            padding: 32px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .profile-edit-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            border: none;
+            background: #f5f7fa;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+        .profile-edit-close:hover {
+            background: #e9ecef;
+            color: #333;
+            transform: rotate(90deg);
+        }
+        .profile-edit-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+        .profile-form {
+            margin-top: 24px;
+        }
+        .profile-form .form-group {
+            margin-bottom: 20px;
+        }
+        .profile-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a237e;
+            letter-spacing: 0.3px;
+        }
+        .profile-form input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e4e8;
+            border-radius: 14px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+            box-sizing: border-box;
+        }
+        .profile-form input:focus {
+            outline: none;
+            border-color: #1a237e;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
+        }
+        .profile-form input:hover {
+            border-color: #c5cae9;
+        }
+        .profile-form .auth-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+        }
+        .profile-form .auth-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 35, 126, 0.4);
+        }
+        .profile-form .auth-submit:active {
+            transform: translateY(0);
+        }
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .auth-tab {
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #dce0e5;
+            background: #f5f7fa;
+            cursor: pointer;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        .auth-tab.active {
+            background: #1a237e;
+            color: #fff;
+            border-color: #1a237e;
+        }
+        .auth-form .form-group {
+            margin-bottom: 14px;
+        }
+        .auth-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+        .auth-form input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #dcdfe5;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border 0.2s ease;
+        }
+        .auth-form input:focus {
+            outline: none;
+            border-color: #1a237e;
+            box-shadow: 0 0 0 2px rgba(26,35,126,0.1);
+        }
+        .auth-submit {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 4px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .auth-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(26,35,126,0.22);
+        }
+        .friends-modal, .friend-detail-modal {
+            background: #fff;
+            border-radius: 18px;
+            padding: 18px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .friends-title {
+            margin: 0 0 12px 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        .friends-search {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .friends-search-input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid #dcdfe5;
+            font-size: 14px;
+        }
+        .friends-search-btn {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 12px;
+            background: #1a237e;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .friends-list {
+            max-height: 320px;
+            overflow: auto;
+            border: 1px solid #eef0f4;
+            border-radius: 12px;
+        }
+        .friend-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f2f3f6;
+        }
+        .friend-row:last-child { border-bottom: none; }
+        .friend-row .name {
+            font-weight: 600;
+            color: #333;
+        }
+        .friend-row .username {
+            color: #777;
+            font-size: 13px;
+        }
+        .friend-row button {
+            border: none;
+            background: #1a237e;
+            color: #fff;
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .friend-detail-modal {
+            max-width: 400px;
+            text-align: center;
+        }
+        .friend-avatar-big {
+            font-size: 72px;
+            color: #1a237e;
+            margin-bottom: 12px;
+        }
+        .friend-detail-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .friend-detail-username {
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .friend-detail-date {
+            color: #888;
+            margin-bottom: 12px;
+        }
+        .friend-subscribe-btn {
+            display: inline-block;
+            padding: 10px 14px;
+            background: #1a237e;
+            color: #fff;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .profile-modal {
+            background: #fff;
+            border-radius: 18px;
+            padding: 20px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .profile-container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            width: 100%;
+            padding: 24px;
+            position: relative;
+            padding-bottom: 70px;
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+        .profile-info { display: flex; align-items: flex-start; }
+        .avatar { margin-right: 16px; }
+        .avatar i { font-size: 64px; color: #4a6cf7; }
+        .user-details h1 { font-size: 22px; color: #333; margin-bottom: 4px; }
+        .user-details p { font-size: 14px; color: #777; }
+        .settings-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        .settings-btn:hover { background-color: #f0f0f0; }
+        .section { margin-bottom: 18px; }
+        .section-title { font-size: 20px; color: #333; margin-bottom: 12px; }
+        .subsection-title { font-size: 16px; color: #555; font-weight: 600; margin: 0; }
+        .bookings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .count { color: #4a6cf7; font-weight: 600; }
+        .details-btn {
+            background-color: #141937;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .details-btn:hover { background-color: #3a5ce5; }
+        .info-section { margin-bottom: 8px; }
+        .info-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }
+        .info-content h3 { font-size: 16px; color: #444; font-weight: 600; margin: 0; }
+        .arrow-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #999;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        .arrow-btn:hover { background-color: #f0f0f0; color: #666; }
+        .divider-after-cities,
+        .divider-after-subscribers { height: 1px; background-color: #e0e0e0; margin: 8px 0 18px 0; }
+        .logout-section { position: absolute; bottom: 24px; left: 24px; }
+        .logout-btn {
+            display: inline-block;
+            background-color: #141937;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(74, 108, 247, 0.3);
+        }
+        .logout-btn:hover { background-color: #3a5ce5; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(74, 108, 247, 0.4); }
+    </style>
 
     <footer class="footer">
         <div class="footer-container">
@@ -599,11 +1388,11 @@
                         <ul class="footer-links">
                             <li><a href="#" class="footer-link">О нас</a></li>
                             <li><a href="{% url 'tours:tour_list' %}" class="footer-link">Готовые туры</a></li>
-                            {% if user.is_authenticated %}
+                        {% if user.is_authenticated %}
                                 <li><a href="{% url 'users:profile' %}" class="footer-link">Профиль</a></li>
-                            {% endif %}
+                        {% endif %}
                             <li><a href="{% url 'hotels:hotel_list' %}" class="footer-link">Отели и билеты</a></li>
-                        </ul>
+                    </ul>
                     </div>
                 </div>
 
@@ -613,7 +1402,7 @@
                         <ul class="footer-links">
                             <li><a href="mailto:journey@gmail.ru" class="footer-link">journey@gmail.ru</a></li>
                             <li><a href="tel:88000003555" class="footer-link">8 800 000 35 55</a></li>
-                        </ul>
+                    </ul>
                     </div>
 
                     <div class="footer-social">
@@ -622,11 +1411,11 @@
                             <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
                             <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
                             <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
-                        </div>
-                    </div>
+                </div>
+            </div>
 
                     <div class="footer-copyright">
-                        <p>Все права защищены 2025 ©</p>
+                <p>Все права защищены 2025 ©</p>
                     </div>
                 </div>
             </div>
@@ -640,7 +1429,7 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
     <!-- Подключаем отдельный JS файл для 3D модели и интерактивности -->
     <script src="{% static 'js/earth.js' %}"></script>
-    
+
     <!-- Переход на страницу рейсов по клику на кнопку рейса -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -691,6 +1480,915 @@
                     });
                 });
             }
+
+            // === Фильтры рейсов ===
+            const form = document.getElementById('flight-filters-form');
+            const roundtripInput = document.getElementById('filter-roundtrip');
+            const fromInput = document.getElementById('filter-from');
+            const toInput = document.getElementById('filter-to');
+            const classInput = document.getElementById('filter-class');
+            const passengersInput = document.getElementById('filter-passengers');
+            const dateInput = document.getElementById('filter-date');
+
+            const btnRoundtrip = document.getElementById('btn-roundtrip');
+            const btnFrom = document.getElementById('btn-from');
+            const btnTo = document.getElementById('btn-to');
+            const btnSwap = document.getElementById('btn-swap');
+            const btnTicket = document.getElementById('btn-ticket');
+            const btnSearch = document.getElementById('btn-search');
+
+            const popupFrom = document.getElementById('popup-from');
+            const popupTo = document.getElementById('popup-to');
+            const popupTicket = document.getElementById('popup-ticket');
+
+            const showPopup = (el) => el.classList.add('active');
+            const hidePopup = (el) => el.classList.remove('active');
+
+            document.querySelectorAll('.popup-overlay .popup-close').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const overlay = e.target.closest('.popup-overlay');
+                    if (overlay) hidePopup(overlay);
+                });
+            });
+
+            popupFrom?.addEventListener('click', (e) => {
+                if (e.target === popupFrom) hidePopup(popupFrom);
+            });
+            popupTo?.addEventListener('click', (e) => {
+                if (e.target === popupTo) hidePopup(popupTo);
+            });
+            popupTicket?.addEventListener('click', (e) => {
+                if (e.target === popupTicket) hidePopup(popupTicket);
+            });
+
+            if (btnRoundtrip) {
+                btnRoundtrip.addEventListener('click', () => {
+                    const current = roundtripInput.value === '1';
+                    roundtripInput.value = current ? '0' : '1';
+                    form.submit();
+                });
+            }
+
+            if (btnFrom && popupFrom) {
+                btnFrom.addEventListener('click', () => showPopup(popupFrom));
+                const resetFrom = popupFrom.querySelector('.from-reset');
+                resetFrom?.addEventListener('click', () => {
+                    fromInput.value = '';
+                    hidePopup(popupFrom);
+                    form.submit();
+                });
+                popupFrom.querySelectorAll('.from-option').forEach(item => {
+                    item.addEventListener('click', () => {
+                        fromInput.value = item.dataset.id || '';
+                        hidePopup(popupFrom);
+                        form.submit();
+                    });
+                });
+            }
+
+            if (btnTo && popupTo) {
+                btnTo.addEventListener('click', () => showPopup(popupTo));
+                const resetTo = popupTo.querySelector('.to-reset');
+                resetTo?.addEventListener('click', () => {
+                    toInput.value = '';
+                    hidePopup(popupTo);
+                    form.submit();
+                });
+                popupTo.querySelectorAll('.to-option').forEach(item => {
+                    item.addEventListener('click', () => {
+                        toInput.value = item.dataset.id || '';
+                        hidePopup(popupTo);
+                        form.submit();
+                    });
+                });
+            }
+
+            if (btnSwap) {
+                btnSwap.addEventListener('click', () => {
+                    const fromVal = fromInput.value;
+                    const toVal = toInput.value;
+                    fromInput.value = toVal;
+                    toInput.value = fromVal;
+                    form.submit();
+                });
+            }
+
+            if (btnTicket && popupTicket) {
+                btnTicket.addEventListener('click', () => showPopup(popupTicket));
+                const applyBtn = document.getElementById('popup-ticket-apply');
+                const passengerField = document.getElementById('popup-passengers');
+                const classField = document.getElementById('popup-class');
+                applyBtn?.addEventListener('click', () => {
+                    passengersInput.value = passengerField.value || '1';
+                    classInput.value = classField.value || 'economy';
+                    hidePopup(popupTicket);
+                    form.submit();
+                });
+            }
+
+            if (btnSearch) {
+                btnSearch.addEventListener('click', () => form.submit());
+            }
+
+            // === Filter Modal ===
+            const btnFilter = document.getElementById('btn-filter');
+            const popupFilter = document.getElementById('popup-filter');
+            const filterClose = document.querySelector('.filter-close');
+            const filterReset = document.getElementById('filter-reset');
+            const filterApply = document.getElementById('filter-apply');
+            const priceMinInput = document.getElementById('filter-price-min');
+            const priceMaxInput = document.getElementById('filter-price-max');
+            const airlinesInput = document.getElementById('filter-airlines');
+            const departureTimeInput = document.getElementById('filter-departure-time');
+            const transfersInput = document.getElementById('filter-transfers');
+            const luggageInput = document.getElementById('filter-luggage');
+            const anyPriceCheckbox = document.getElementById('any-price');
+            const priceDisplay = document.getElementById('price-display');
+            const sliderThumb = document.getElementById('slider-thumb');
+            const sliderRange = document.getElementById('slider-range');
+            const priceMinValue = document.getElementById('price-min-value');
+            const priceMaxValue = document.getElementById('price-max-value');
+
+            // Получаем значения из контекста
+            const priceMinDefault = {{ price_min_default|default:0 }};
+            const priceMaxDefault = {{ price_max_default|default:50000 }};
+            let currentPriceMax = priceMaxDefault;
+            if (priceMaxValue && priceMaxValue.value) {
+                currentPriceMax = parseFloat(priceMaxValue.value) || priceMaxDefault;
+            }
+
+            // Инициализация слайдера цены
+            let isDragging = false;
+            let sliderWidth = 0;
+            let maxPrice = priceMaxDefault;
+
+            const initSlider = () => {
+                if (!sliderThumb || !sliderRange || !priceMaxValue) return;
+                sliderWidth = sliderThumb.parentElement.offsetWidth;
+                const currentMax = parseFloat(priceMaxValue.value) || maxPrice;
+                const percent = ((maxPrice - currentMax) / (maxPrice - priceMinDefault)) * 100;
+                const leftPercent = Math.max(0, Math.min(100, percent));
+                sliderThumb.style.left = `${100 - leftPercent}%`;
+                sliderRange.style.right = `${leftPercent}%`;
+                priceDisplay.textContent = `${Math.round(currentMax).toLocaleString('ru-RU')} ₽`;
+            };
+
+            // Обработка слайдера
+            if (sliderThumb && sliderRange) {
+                sliderThumb.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging || !sliderThumb) return;
+                    const rect = sliderThumb.parentElement.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+                    const rightPercent = 100 - percent;
+                    sliderThumb.style.left = `${percent}%`;
+                    sliderRange.style.right = `${rightPercent}%`;
+                    const newPrice = priceMinDefault + (maxPrice - priceMinDefault) * (rightPercent / 100);
+                    priceMaxValue.value = Math.round(newPrice);
+                    priceDisplay.textContent = `${Math.round(newPrice).toLocaleString('ru-RU')} ₽`;
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                // Инициализация при открытии модального окна
+                if (btnFilter && popupFilter) {
+                    btnFilter.addEventListener('click', () => {
+                        popupFilter.style.display = 'flex';
+                        // Обновляем значение из скрытого поля
+                        if (priceMaxInput && priceMaxInput.value) {
+                            priceMaxValue.value = priceMaxInput.value;
+                        } else {
+                            priceMaxValue.value = maxPrice;
+                        }
+                        setTimeout(initSlider, 100);
+                    });
+                }
+            }
+
+            // Обработка "Любая цена"
+            if (anyPriceCheckbox) {
+                anyPriceCheckbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        priceMinInput.value = '';
+                        priceMaxInput.value = '';
+                        priceMaxValue.value = maxPrice;
+                        initSlider();
+                    }
+                });
+            }
+
+            // Закрытие модального окна
+            if (filterClose) {
+                filterClose.addEventListener('click', () => {
+                    popupFilter.style.display = 'none';
+                });
+            }
+            if (popupFilter) {
+                popupFilter.addEventListener('click', (e) => {
+                    if (e.target === popupFilter) {
+                        popupFilter.style.display = 'none';
+                    }
+                });
+            }
+
+            // Сброс фильтров
+            if (filterReset) {
+                filterReset.addEventListener('click', () => {
+                    // Сброс цены
+                    anyPriceCheckbox.checked = true;
+                    priceMinInput.value = '';
+                    priceMaxInput.value = '';
+                    priceMaxValue.value = maxPrice;
+                    initSlider();
+
+                    // Сброс авиакомпаний
+                    document.querySelectorAll('.airline-checkbox').forEach(cb => cb.checked = true);
+
+                    // Сброс времени вылета
+                    document.querySelectorAll('.time-checkbox').forEach(cb => cb.checked = true);
+
+                    // Сброс пересадок
+                    document.querySelectorAll('.transfer-checkbox').forEach(cb => {
+                        if (cb.value === '0' || cb.value === '1') cb.checked = true;
+                        else cb.checked = false;
+                    });
+
+                    // Сброс багажа
+                    document.querySelector('#with-luggage').checked = true;
+                    document.querySelector('#without-luggage').checked = false;
+                });
+            }
+
+            // Применение фильтров
+            if (filterApply) {
+                filterApply.addEventListener('click', () => {
+                    // Цена
+                    if (!anyPriceCheckbox.checked) {
+                        priceMinInput.value = priceMinValue.value || '';
+                        priceMaxInput.value = priceMaxValue.value || '';
+                    } else {
+                        priceMinInput.value = '';
+                        priceMaxInput.value = '';
+                    }
+
+                    // Авиакомпании
+                    const selectedAirlines = Array.from(document.querySelectorAll('.airline-checkbox:checked'))
+                        .map(cb => cb.value).join(',');
+                    airlinesInput.value = selectedAirlines;
+
+                    // Время вылета
+                    const selectedTimes = Array.from(document.querySelectorAll('.time-checkbox:checked'))
+                        .map(cb => cb.value).join(',');
+                    departureTimeInput.value = selectedTimes;
+
+                    // Пересадки
+                    const selectedTransfers = Array.from(document.querySelectorAll('.transfer-checkbox:checked'))
+                        .map(cb => cb.value).join(',');
+                    transfersInput.value = selectedTransfers;
+
+                    // Багаж
+                    const selectedLuggage = Array.from(document.querySelectorAll('.luggage-checkbox:checked'))
+                        .map(cb => cb.value).join(',');
+                    luggageInput.value = selectedLuggage;
+
+                    // Обновление счетчика
+                    const flightsCount = document.querySelectorAll('.flight-card').length;
+                    document.getElementById('flights-count').textContent = `(${flightsCount})`;
+
+                    // Закрытие и отправка формы
+                    popupFilter.style.display = 'none';
+                    form.submit();
+                });
+            }
+
+            document.querySelectorAll('.date-btn').forEach(btn => {
+                const dateVal = btn.dataset.date;
+                const disabled = btn.dataset.disabled === 'true';
+                btn.addEventListener('click', () => {
+                    if (disabled) return;
+                    dateInput.value = dateVal || '';
+                    form.submit();
+                });
+            });
+
+            // === Сбор выбора для конструктора тура ===
+            const flightsSelection = new Set();
+            const hotelsSelection = new Set();
+            const placesSelection = new Set();
+            const citiesSelection = new Set();
+            const friendsSelection = new Set();
+
+            const updateHidden = () => {
+                document.getElementById('selected_flights').value = Array.from(flightsSelection).join(',');
+                document.getElementById('selected_hotels').value = Array.from(hotelsSelection).join(',');
+                document.getElementById('selected_places').value = Array.from(placesSelection).join(',');
+                document.getElementById('selected_cities').value = Array.from(citiesSelection).join(',');
+                document.getElementById('selected_friends').value = Array.from(friendsSelection).join(',');
+                const summary = document.getElementById('selected-summary');
+                summary.textContent = `Рейсы: ${flightsSelection.size}, Отели: ${hotelsSelection.size}, Города: ${citiesSelection.size}, Места: ${placesSelection.size}, Друзья: ${friendsSelection.size}`;
+            };
+
+            const toggleCard = (el, set, id) => {
+                if (!id) return;
+                if (set.has(id)) {
+                    set.delete(id);
+                    el.classList.remove('selected-card');
+                } else {
+                    set.add(id);
+                    el.classList.add('selected-card');
+                }
+                updateHidden();
+            };
+
+            document.querySelectorAll('.select-flight').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.flight-card');
+                    const id = card?.dataset.flightId;
+                    toggleCard(card, flightsSelection, id);
+                });
+            });
+
+            document.querySelectorAll('.select-hotel').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.hotel-card');
+                    const id = card?.dataset.hotelId;
+                    toggleCard(card, hotelsSelection, id);
+                });
+            });
+
+            document.querySelectorAll('.select-friend').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.friendId;
+                    const card = e.target.closest('.friend-card');
+                    toggleCard(card, friendsSelection, id);
+                });
+            });
+
+            document.querySelectorAll('.select-place, .place-visit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.place-item, .city-card');
+                    if (!card) return;
+                    let id = e.target.dataset.placeId || card.dataset.placeId || '';
+                    if (!id) {
+                        const name = card.dataset.placeName || card.querySelector('.place-description')?.textContent?.trim() || '';
+                        id = name || 'place-' + Math.random().toString(36).slice(2, 8);
+                        card.dataset.placeId = id;
+                        if (name) card.dataset.placeName = name;
+                    }
+                    toggleCard(card, placesSelection, id);
+                });
+            });
+
+            document.querySelectorAll('.select-city, .city-card .visit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.city-card');
+                    if (!card) return;
+                    let id = e.target.dataset.cityId || card.dataset.cityId || '';
+                    let name = e.target.dataset.cityName || card.dataset.cityName || '';
+                    if (!id) {
+                        id = name || 'city-' + Math.random().toString(36).slice(2, 8);
+                        card.dataset.cityId = id;
+                    }
+                    if (!name) {
+                        name = card.querySelector('.city-title')?.textContent?.trim() || 'Город';
+                        card.dataset.cityName = name;
+                    }
+                    toggleCard(card, citiesSelection, id);
+                    if (citiesSelection.has(id)) {
+                        card.dataset.cityName = name;
+                    }
+                });
+            });
+
+            // Метаданные для превью
+            const flightMeta = new Map();
+            document.querySelectorAll('.flight-card').forEach(card => {
+                const id = card.dataset.flightId;
+                if (!id) return;
+                flightMeta.set(id, {
+                    route: card.dataset.flightRoute || card.querySelector('.flight-route')?.textContent?.trim() || '',
+                    time: card.dataset.flightTime || '',
+                    price: card.dataset.flightPrice || ''
+                });
+            });
+
+            const hotelMeta = new Map();
+            document.querySelectorAll('.hotel-card').forEach(card => {
+                const id = card.dataset.hotelId;
+                if (!id) return;
+                hotelMeta.set(id, {
+                    name: card.dataset.hotelName || '',
+                    price: card.dataset.hotelPrice || ''
+                });
+            });
+
+            const friendMeta = new Map();
+            document.querySelectorAll('.friend-card').forEach(card => {
+                const id = card.dataset.friendId;
+                if (!id) return;
+                friendMeta.set(id, {
+                    name: card.dataset.friendName || ''
+                });
+            });
+
+            const placeMeta = new Map();
+            document.querySelectorAll('.select-place').forEach(btn => {
+                const id = btn.dataset.placeId || btn.closest('.selectable-card')?.dataset.placeId || '';
+                if (!id) return;
+                const name = btn.dataset.placeName || btn.closest('.selectable-card')?.dataset.placeName || (btn.closest('.place-item')?.querySelector('.place-description')?.textContent?.trim() || 'Место');
+                placeMeta.set(id, { name });
+            });
+
+            const cityMeta = new Map();
+            document.querySelectorAll('.select-city').forEach(btn => {
+                const id = btn.dataset.cityId || btn.closest('.city-card')?.dataset.cityId || '';
+                if (!id) return;
+                const name = btn.dataset.cityName || btn.closest('.city-card')?.dataset.cityName || '';
+                cityMeta.set(id || name, { name: name || id });
+            });
+
+            // Рендер превью
+            const preview = document.getElementById('built-preview');
+
+            const buildForm = document.getElementById('build-tour-form');
+            buildForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                renderPreview();
+            });
+
+            function renderPreview() {
+                preview.style.display = 'block';
+                const container = document.getElementById('built-timeline');
+                container.innerHTML = '';
+                const line = document.createElement('div');
+                line.className = 'timeline-line';
+                container.appendChild(line);
+
+                const addCard = (side, iconClass, title, subtitle, desc, badgeHtml = '') => {
+                    const card = document.createElement('div');
+                    card.className = `card ${side === 'left' ? 'card-left' : 'card-right'} white-bg`;
+                    card.innerHTML = `
+                        <div class="icon-container">
+                            <div class="circle-icon ${iconClass === 'fa-plane' ? 'filled' : 'hollow'}"></div>
+                            <div class="icon-item">
+                                <i class="fas ${iconClass}"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            ${badgeHtml}
+                            <div class="card-time">${subtitle || ''}</div>
+                            <h3 class="card-title">${title}</h3>
+                            <p class="card-text">${desc || ''}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                };
+
+                let sideToggle = false;
+
+                flightsSelection.forEach(id => {
+                    const meta = flightMeta.get(id);
+                    addCard(
+                        sideToggle ? 'right' : 'left',
+                        'fa-plane',
+                        meta ? meta.route : `Рейс ${id}`,
+                        meta?.time || '',
+                        meta?.price || '',
+                        `<span class="built-badge badge-flight">Рейс</span>`
+                    );
+                    sideToggle = !sideToggle;
+                });
+
+                hotelsSelection.forEach(id => {
+                    const meta = hotelMeta.get(id);
+                    addCard(
+                        sideToggle ? 'right' : 'left',
+                        'fa-bed',
+                        meta ? meta.name : `Отель ${id}`,
+                        meta?.price || '',
+                        '',
+                        `<span class="built-badge badge-hotel">Отель</span>`
+                    );
+                    sideToggle = !sideToggle;
+                });
+
+                citiesSelection.forEach(id => {
+                    const meta = cityMeta.get(id) || cityMeta.get(Array.from(cityMeta.keys()).find(k => k === id));
+                    addCard(
+                        sideToggle ? 'right' : 'left',
+                        'fa-city',
+                        meta ? meta.name : `Город ${id}`,
+                        '',
+                        '',
+                        `<span class="built-badge badge-place">Город</span>`
+                    );
+                    sideToggle = !sideToggle;
+                });
+
+                placesSelection.forEach(id => {
+                    const meta = placeMeta.get(id);
+                    addCard(
+                        sideToggle ? 'right' : 'left',
+                        'fa-landmark',
+                        meta ? meta.name : `Место ${id}`,
+                        '',
+                        '',
+                        `<span class="built-badge badge-place">Место</span>`
+                    );
+                    sideToggle = !sideToggle;
+                });
+
+                friendsSelection.forEach(id => {
+                    const meta = friendMeta.get(id);
+                    addCard(
+                        sideToggle ? 'right' : 'left',
+                        'fa-user-friends',
+                        meta ? meta.name : `Пользователь ${id}`,
+                        '',
+                        '',
+                        `<span class="built-badge badge-friend">Друг</span>`
+                    );
+                    sideToggle = !sideToggle;
+                });
+            }
+
+            // ===== Модалки авторизации и друзей =====
+            const isAuth = '{{ user.is_authenticated|yesno:"true,false" }}' === 'true';
+            const overlay = document.querySelector('.auth-overlay');
+            const tabs = document.querySelectorAll('.auth-tab');
+            const forms = {
+                login: document.querySelector('.auth-login-form'),
+                register: document.querySelector('.auth-register-form')
+            };
+
+            const switchMode = (mode) => {
+                tabs.forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+                forms.login.style.display = mode === 'login' ? 'block' : 'none';
+                forms.register.style.display = mode === 'register' ? 'block' : 'none';
+            };
+
+            tabs.forEach(tab => tab.addEventListener('click', () => switchMode(tab.dataset.mode)));
+
+            const openAuth = (mode='login') => {
+                if (!overlay) return;
+                switchMode(mode);
+                overlay.style.display = 'flex';
+            };
+
+            document.querySelectorAll('.open-auth-modal').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const mode = btn.dataset.mode || 'login';
+                    openAuth(mode);
+                });
+            });
+
+            document.querySelector('.auth-close')?.addEventListener('click', () => overlay.style.display = 'none');
+            overlay?.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.style.display = 'none';
+            });
+
+            document.querySelectorAll('[data-requires-auth]').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (isAuth) return;
+                    e.preventDefault();
+                    const mode = el.dataset.mode || 'login';
+                    openAuth(mode);
+                });
+            });
+
+            const friendsOverlay = document.querySelector('.friends-overlay');
+            const friendDetailOverlay = document.querySelector('.friend-detail-overlay');
+            const friendsListEl = document.getElementById('friends-list');
+            const searchInput = document.querySelector('.friends-search-input');
+            const searchBtn = document.querySelector('.friends-search-btn');
+
+            const closeFriends = () => friendsOverlay.style.display = 'none';
+            const closeFriendDetail = () => friendDetailOverlay.style.display = 'none';
+
+            document.querySelector('.friends-close')?.addEventListener('click', closeFriends);
+            friendsOverlay?.addEventListener('click', (e) => { if (e.target === friendsOverlay) closeFriends(); });
+            document.querySelector('.friend-detail-close')?.addEventListener('click', closeFriendDetail);
+            friendDetailOverlay?.addEventListener('click', (e) => { if (e.target === friendDetailOverlay) closeFriendDetail(); });
+
+            const openFriendDetail = (id) => {
+                fetch(`{% url 'users:api_user_detail' pk=0 %}`.replace('/0/', `/${id}/`))
+                    .then(r => r.json())
+                    .then(u => {
+                        document.getElementById('friend-name').textContent = (u.first_name || u.last_name) ? `${u.first_name} ${u.last_name}`.trim() : u.username;
+                        document.getElementById('friend-username').textContent = `@${u.username}`;
+                        document.getElementById('friend-date').textContent = u.date_joined ? `С нами с ${u.date_joined}` : '';
+                        const sub = document.getElementById('friend-subscribe');
+                        sub.dataset.friendId = u.id;
+                        sub.href = `{% url 'users:friend_add' user_id=0 %}`.replace('/0/', `/${u.id}/`);
+                        friendDetailOverlay.style.display = 'flex';
+                    });
+            };
+
+            const renderFriends = (users=[]) => {
+                friendsListEl.innerHTML = '';
+                users.forEach(u => {
+                    const row = document.createElement('div');
+                    row.className = 'friend-row';
+                    row.innerHTML = `
+                        <div>
+                            <div class="name">${u.first_name || u.last_name ? (u.first_name + ' ' + u.last_name).trim() : u.username}</div>
+                            <div class="username">@${u.username}</div>
+                        </div>
+                        <button type="button" data-id="${u.id}">Открыть</button>
+                    `;
+                    row.querySelector('button').addEventListener('click', () => openFriendDetail(u.id));
+                    friendsListEl.appendChild(row);
+                });
+            };
+
+            const fetchFriends = (q='') => {
+                fetch(`{% url 'users:api_users' %}?q=${encodeURIComponent(q)}`)
+                    .then(r => r.json())
+                    .then(data => renderFriends(data.users || []));
+            };
+
+            const openFriendsModal = () => {
+                if (!isAuth) {
+                    openAuth('login');
+                    return;
+                }
+                friendsOverlay.style.display = 'flex';
+                fetchFriends('');
+            };
+
+            document.querySelectorAll('.open-friends-modal').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openFriendsModal();
+                });
+            });
+
+            searchBtn?.addEventListener('click', () => fetchFriends(searchInput.value || ''));
+
+            // Профиль
+            const getCSRF = () => {
+                const match = document.cookie.match(/csrftoken=([^;]+)/);
+                return match ? match[1] : '';
+            };
+            const profileOverlay = document.querySelector('.profile-overlay');
+            const profileEditOverlay = document.querySelector('.profile-edit-overlay');
+            const profileForm = document.querySelector('.profile-form');
+            const profileNameEl = document.querySelector('.profile-user-name');
+            const profileIdEl = document.querySelector('.profile-user-id');
+            const closeProfile = () => profileOverlay.style.display = 'none';
+            const closeProfileEdit = () => profileEditOverlay.style.display = 'none';
+            document.querySelector('.profile-close')?.addEventListener('click', closeProfile);
+            profileOverlay?.addEventListener('click', (e) => { if (e.target === profileOverlay) closeProfile(); });
+            document.querySelector('.profile-edit-close')?.addEventListener('click', closeProfileEdit);
+            profileEditOverlay?.addEventListener('click', (e) => { if (e.target === profileEditOverlay) closeProfileEdit(); });
+
+            const fillProfile = (data) => {
+                if (profileNameEl) profileNameEl.textContent = (data.first_name || data.last_name) ? `${data.first_name || ''} ${data.last_name || ''}`.trim() : (data.username || '');
+                if (profileIdEl) profileIdEl.textContent = data.id ? `ID: ${data.id}` : 'ID: —';
+            };
+            const fillProfileEdit = (data) => {
+                if (!profileForm) return;
+                profileForm.username.value = data.username || '';
+                profileForm.first_name.value = data.first_name || '';
+                profileForm.last_name.value = data.last_name || '';
+                profileForm.email.value = data.email || '';
+            };
+            const openProfile = () => {
+                if (!isAuth) {
+                    openAuth('login');
+                    return;
+                }
+                fetch("{% url 'users:api_profile' %}")
+                    .then(r => r.json())
+                    .then(data => {
+                        fillProfile(data);
+                        profileOverlay.style.display = 'flex';
+                    });
+            };
+            const openProfileEdit = () => {
+                if (!isAuth) {
+                    openAuth('login');
+                    return;
+                }
+                fetch("{% url 'users:api_profile' %}")
+                    .then(r => r.json())
+                    .then(data => {
+                        fillProfileEdit(data);
+                        profileEditOverlay.style.display = 'flex';
+                    });
+            };
+            document.querySelectorAll('.open-profile-modal').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openProfile();
+                });
+            });
+            document.querySelector('.settings-btn')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                openProfileEdit();
+            });
+            profileForm?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(profileForm);
+                fetch("{% url 'users:api_profile' %}", {
+                    method: 'POST',
+                    headers: {'X-CSRFToken': getCSRF()},
+                    body: formData
+                }).then(r => r.json()).then((data) => {
+                    fillProfile(data);
+                    closeProfileEdit();
+                });
+            });
+
+            updateHidden();
+        });
+
+        // === Hotel Filter Modal ===
+        const btnHotelFilter = document.getElementById('btn-hotel-filter');
+        const popupHotelFilter = document.getElementById('popup-hotel-filter');
+        const hotelFilterClose = document.querySelector('.hotel-filter-close');
+        const hotelFilterReset = document.getElementById('hotel-filter-reset');
+        const hotelFilterApply = document.getElementById('hotel-filter-apply');
+        const hotelPriceMinInput = document.getElementById('filter-hotel-price-min');
+        const hotelPriceMaxInput = document.getElementById('filter-hotel-price-max');
+        const hotelRatingsInput = document.getElementById('filter-hotel-ratings');
+        const hotelAnyPriceCheckbox = document.getElementById('hotel-any-price');
+        const hotelPriceDisplay = document.getElementById('hotel-price-display');
+        const hotelSliderThumb = document.getElementById('hotel-slider-thumb');
+        const hotelSliderRange = document.getElementById('hotel-slider-range');
+        const hotelPriceMinValue = document.getElementById('hotel-price-min-value');
+        const hotelPriceMaxValue = document.getElementById('hotel-price-max-value');
+
+        // Получаем значения из контекста
+        const hotelPriceMinDefault = {{ hotel_price_min_default|default:0 }};
+        const hotelPriceMaxDefault = {{ hotel_price_max_default|default:10000 }};
+        let currentHotelPriceMax = hotelPriceMaxDefault;
+        if (hotelPriceMaxValue && hotelPriceMaxValue.value) {
+            currentHotelPriceMax = parseFloat(hotelPriceMaxValue.value) || hotelPriceMaxDefault;
+        }
+
+        // Инициализация слайдера цены отелей
+        let isHotelDragging = false;
+        let hotelMaxPrice = hotelPriceMaxDefault;
+
+        const initHotelSlider = () => {
+            if (!hotelSliderThumb || !hotelSliderRange || !hotelPriceMaxValue) return;
+            const currentMax = parseFloat(hotelPriceMaxValue.value) || hotelMaxPrice;
+            const percent = ((hotelMaxPrice - currentMax) / (hotelMaxPrice - hotelPriceMinDefault)) * 100;
+            const leftPercent = Math.max(0, Math.min(100, percent));
+            hotelSliderThumb.style.left = `${100 - leftPercent}%`;
+            hotelSliderRange.style.right = `${leftPercent}%`;
+            hotelPriceDisplay.textContent = `${Math.round(currentMax).toLocaleString('ru-RU')} ₽`;
+        };
+
+        // Обработка слайдера отелей
+        if (hotelSliderThumb && hotelSliderRange) {
+            hotelSliderThumb.addEventListener('mousedown', (e) => {
+                isHotelDragging = true;
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isHotelDragging || !hotelSliderThumb) return;
+                const rect = hotelSliderThumb.parentElement.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+                const rightPercent = 100 - percent;
+                hotelSliderThumb.style.left = `${percent}%`;
+                hotelSliderRange.style.right = `${rightPercent}%`;
+                const newPrice = hotelPriceMinDefault + (hotelMaxPrice - hotelPriceMinDefault) * (rightPercent / 100);
+                hotelPriceMaxValue.value = Math.round(newPrice);
+                hotelPriceDisplay.textContent = `${Math.round(newPrice).toLocaleString('ru-RU')} ₽`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isHotelDragging = false;
+            });
+
+            // Инициализация при открытии модального окна
+            if (btnHotelFilter && popupHotelFilter) {
+                btnHotelFilter.addEventListener('click', () => {
+                    popupHotelFilter.style.display = 'flex';
+                    if (hotelPriceMaxInput && hotelPriceMaxInput.value) {
+                        hotelPriceMaxValue.value = hotelPriceMaxInput.value;
+                    } else {
+                        hotelPriceMaxValue.value = hotelMaxPrice;
+                    }
+                    setTimeout(initHotelSlider, 100);
+                });
+            }
+        }
+
+        // Обработка "Любая цена" для отелей
+        if (hotelAnyPriceCheckbox) {
+            hotelAnyPriceCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    hotelPriceMinInput.value = '';
+                    hotelPriceMaxInput.value = '';
+                    hotelPriceMaxValue.value = hotelMaxPrice;
+                    initHotelSlider();
+                }
+            });
+        }
+
+        // Закрытие модального окна отелей
+        if (hotelFilterClose) {
+            hotelFilterClose.addEventListener('click', () => {
+                popupHotelFilter.style.display = 'none';
+            });
+        }
+        if (popupHotelFilter) {
+            popupHotelFilter.addEventListener('click', (e) => {
+                if (e.target === popupHotelFilter) {
+                    popupHotelFilter.style.display = 'none';
+                }
+            });
+        }
+
+        // Сброс фильтров отелей
+        if (hotelFilterReset) {
+            hotelFilterReset.addEventListener('click', () => {
+                // Сброс цены
+                hotelAnyPriceCheckbox.checked = true;
+                hotelPriceMinInput.value = '';
+                hotelPriceMaxInput.value = '';
+                hotelPriceMaxValue.value = hotelMaxPrice;
+                initHotelSlider();
+
+                // Сброс рейтингов
+                document.querySelectorAll('.hotel-rating-checkbox').forEach(cb => {
+                    if (cb.value === '5' || cb.value === '4' || cb.value === '3' || cb.value === '0') cb.checked = true;
+                    else cb.checked = false;
+                });
+            });
+        }
+
+        // Применение фильтров отелей
+        if (hotelFilterApply) {
+            hotelFilterApply.addEventListener('click', () => {
+                // Цена
+                if (!hotelAnyPriceCheckbox.checked) {
+                    hotelPriceMinInput.value = hotelPriceMinValue.value || '';
+                    hotelPriceMaxInput.value = hotelPriceMaxValue.value || '';
+                } else {
+                    hotelPriceMinInput.value = '';
+                    hotelPriceMaxInput.value = '';
+                }
+
+                // Рейтинги
+                const selectedRatings = Array.from(document.querySelectorAll('.hotel-rating-checkbox:checked'))
+                    .map(cb => cb.value).join(',');
+                hotelRatingsInput.value = selectedRatings;
+
+                // Обновление счетчика
+                const hotelsCount = document.querySelectorAll('.hotel-card').length;
+                document.getElementById('hotels-count').textContent = `(${hotelsCount})`;
+
+                // Закрытие и отправка формы
+                popupHotelFilter.style.display = 'none';
+                form.submit();
+            });
+        }
+
+        // Logout modal
+        const logoutOverlay = document.querySelector('.logout-overlay');
+        const logoutYesBtn = document.getElementById('logout-yes');
+        const logoutCancelBtn = document.getElementById('logout-cancel');
+
+        const openLogoutModal = () => {
+            if (logoutOverlay) {
+                logoutOverlay.style.display = 'flex';
+            }
+        };
+
+        const closeLogoutModal = () => {
+            if (logoutOverlay) {
+                logoutOverlay.style.display = 'none';
+            }
+        };
+
+        document.querySelectorAll('.open-logout-modal').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openLogoutModal();
+            });
+        });
+
+        logoutCancelBtn?.addEventListener('click', closeLogoutModal);
+        logoutOverlay?.addEventListener('click', (e) => {
+            if (e.target === logoutOverlay) closeLogoutModal();
+        });
+
+        logoutYesBtn?.addEventListener('click', () => {
+            window.location.href = "{% url 'users:logout' %}";
         });
     </script>
 </body>

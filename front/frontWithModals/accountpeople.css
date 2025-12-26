@@ -1,0 +1,245 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 15px;
+}
+
+.profile-container {
+    width: 350px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 24px;
+}
+
+/* Шапка профиля с уменьшенной аватаркой */
+.user-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #e8f0fe;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #141937;
+    margin-bottom: 4px;
+}
+
+.user-id {
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* Поиск попутчиков - простой текст размером 16px */
+.search-section {
+    margin-bottom: 24px;
+}
+
+.search-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #141937;
+}
+
+/* Статистика */
+.stats-section {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #141937;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Кнопка подписки - уменьшена в 2 раза */
+.subscribe-section {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.subscribe-btn {
+    background-color: #141937;
+    color: white;
+    border: none;
+    border-radius: 20px; /* Уменьшено с 39px */
+    padding: 8px 20px; /* Уменьшено в 2 раза */
+    font-size: 14px; /* Уменьшено с 15px */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 150px; /* Уменьшено с 220px */
+}
+
+.subscribe-btn:hover {
+    background-color: #0f1530;
+}
+
+/* Раздел путешествий */
+.travel-section {
+    margin-top: 8px;
+}
+
+.section-title {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 20px;
+}
+
+.travels-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #141937;
+    margin-right: 8px;
+}
+
+
+/* Элементы туров */
+.travel-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.travel-item:last-child {
+    border-bottom: none;
+}
+
+.travel-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.travel-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #141937;
+}
+
+.travel-count {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Кнопка подробнее - уменьшена на 8px */
+.more-btn {
+    background-color: #141937;
+    color: white;
+    border: none;
+    border-radius: 14px; 
+    padding: 4px 12px; 
+    font-size: 12px; 
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.more-btn:hover {
+    background-color: #1d4ed8;
+}
+
+/* Кнопка со стрелкой */
+.arrow-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #f1f5f9;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.arrow-btn:hover {
+    background-color: #e2e8f0;
+    color: #2563eb;
+}
+
+@media (max-width: 400px) {
+    .profile-container {
+        width: 100%;
+        max-width: 320px;
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .user-avatar {
+        width: 55px;
+        height: 55px;
+        font-size: 44px;
+        margin-right: 14px;
+    }
+    
+    .user-name {
+        font-size: 18px;
+    }
+    
+    .search-text {
+        font-size: 15px;
+        padding: 10px;
+    }
+    
+    .stats-section {
+        gap: 30px;
+    }
+    
+    .travels-title {
+        font-size: 20px;
+    }
+}

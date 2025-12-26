@@ -12,4 +12,7 @@ urlpatterns = [
     path('friends/', views.friends_list, name='friends_list'),
     path('friends/search/', views.friends_search, name='friends_search'),
     path('friends/add/<int:user_id>/', views.friend_add, name='friend_add'),
+    path('api/users/', views.api_users, name='api_users'),
+    path('api/users/<int:pk>/', views.api_user_detail, name='api_user_detail'),
+    path('api/profile/', views.api_profile, name='api_profile'),
 ]
