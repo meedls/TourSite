@@ -371,6 +371,12 @@
                 </div>
             </div>
         </div>
+        <!-- ===== TOAST ДЛЯ ДОСТИЖЕНИЙ ===== -->
+        <div id="achievementToast" class="achievement-toast">
+            <div class="achievement-toast-title">ДОСТИЖЕНИЕ</div>
+            <div class="achievement-toast-name" id="toastAchievementName"></div>
+            <div class="achievement-toast-desc" id="toastAchievementDesc"></div>
+        </div>
     </footer>
 
     <!-- Friends list modal -->
@@ -1069,10 +1075,90 @@
         .btn-cancel:hover {
             background-color: #e0e0e0;
         }
+        /* ===== TOAST УВЕДОМЛЕНИЕ ДЛЯ ДОСТИЖЕНИЙ ===== */
+.achievement-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    max-width: 340px;
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    border-left: 3px solid #3b82f6;
+}
+
+.achievement-toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.achievement-toast.hide {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.achievement-toast-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.achievement-toast-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.achievement-toast-desc {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+    .achievement-toast {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+    }
+}
     </style>
 
     <script>
+        function showAchievementToast(name, description) {
+    const toast = document.getElementById('achievementToast');
+    const titleEl = document.getElementById('toastAchievementName');
+    const descEl = document.getElementById('toastAchievementDesc');
 
+    titleEl.textContent = name;
+    descEl.textContent = description;
+
+    toast.classList.remove('hide');
+    toast.classList.add('show');
+
+    // скрыть через 4 секунды
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+    }, 4000);
+
+    // клик — сразу закрыть
+    toast.onclick = () => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+    };
+}
 
         document.addEventListener('DOMContentLoaded', () => {
             const isAuth = '{{ user.is_authenticated|yesno:"true,false" }}' === 'true';
