@@ -360,7 +360,9 @@
                         <h3 class="footer-category">МЫ В ИНТЕРНЕТЕ</h3>
                         <div class="social-icons">
                             <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
-                            <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+                            <a href="#" class="social-icon telegram-link">
+                                <i class="fab fa-telegram"></i>
+                            </a>
                             <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
                         </div>
                     </div>
@@ -1136,6 +1138,23 @@
     </style>
 
     <script>
+        // === ДОСТИЖЕНИЕ: КЛИК ПО TELEGRAM ===
+document.querySelectorAll('.telegram-link').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        fetch('/achievements/telegram/')
+            .then(res => res.json())
+            .then(data => {
+                if (data.unlocked) {
+                    showAchievementToast(
+                        data.name,
+                        data.description
+                    );
+                }
+            });
+    });
+});
         function showAchievementToast(name, description) {
     const toast = document.getElementById('achievementToast');
     const titleEl = document.getElementById('toastAchievementName');
