@@ -26,6 +26,7 @@ urlpatterns = [
     path('places/', include('places.urls')),
     path('hotels/', include('hotels.urls')),
     path('flights/', include('flights.urls')),
+    path('achievements/', include('achievements.urls')),
 ]
 
 # Serve media files in development
