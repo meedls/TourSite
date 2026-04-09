@@ -1,0 +1,130 @@
+[
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "new_user",
+      "title": "Новичок",
+      "description": "Первый заход на сайт"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "scroll_footer",
+      "title": "Первые шаги",
+      "description": "Доскроллил страницу до футера"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "use_slider",
+      "title": "Первый шаг",
+      "description": "Использовал слайдер"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "open_tours",
+      "title": "Перейдём к делу",
+      "description": "Открыл страницу туров"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "view_tours",
+      "title": "Любознательный",
+      "description": "Просмотрел несколько туров"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "select_city",
+      "title": "Полетели",
+      "description": "Выбрал город для поиска тура"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "first_favorite",
+      "title": "Скудный выбор",
+      "description": "Добавил первый тур в избранное"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "three_favorites",
+      "title": "Хороший выбор",
+      "description": "Добавил 3 тура в избранное"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "select_hotel",
+      "title": "Комфортабельность",
+      "description": "Выбрал отель"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "start_booking",
+      "title": "Поехали!",
+      "description": "Начал оформление тура"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "buy_ticket_click",
+      "title": "Всё же полетим",
+      "description": "Нажал кнопку купить авиабилет"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "open_friends",
+      "title": "Дружелюбие",
+      "description": "Открыл вкладку друзей"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "friend_added",
+      "title": "Первый друг",
+      "description": "Добавил друга"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "group_tour",
+      "title": "Совместный тур",
+      "description": "Добавил участников в тур"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "only_friend_tour",
+      "title": "Братья дороже",
+      "description": "Добавил только друга в тур"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "explorer",
+      "title": "Здесь должен был быть МАХ",
+      "description": "Попытка попасть на несуществующую страницу или клик по мессенджерам"
+    }
+  }
+]
