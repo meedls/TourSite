@@ -66,13 +66,26 @@
             }
             timerId = setInterval(() => setSlide(current + 1), 6000);
         };
+let sliderAchievementTriggered = false;
 
-        indicators.forEach((dot, idx) => {
-            dot.addEventListener('click', () => {
-                setSlide(idx);
-                resetTimer();
-            });
-        });
+indicators.forEach((dot, idx) => {
+    dot.addEventListener('click', () => {
+        setSlide(idx);
+        resetTimer();
+
+        if (!sliderAchievementTriggered) {
+            sliderAchievementTriggered = true;
+
+            fetch('/achievements/use-slider/')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.unlocked) {
+                        showAchievementToast(data.name, data.description);
+                    }
+                });
+        }
+    });
+});
 
         // начальное заполнение без анимации
         setSlide(0);

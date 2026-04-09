@@ -26,41 +26,9 @@
   {
     "model": "achievements.achievement",
     "fields": {
-      "code": "open_tours",
-      "title": "Перейдём к делу",
-      "description": "Открыл страницу туров"
-    }
-  },
-  {
-    "model": "achievements.achievement",
-    "fields": {
-      "code": "view_tours",
-      "title": "Любознательный",
-      "description": "Просмотрел несколько туров"
-    }
-  },
-  {
-    "model": "achievements.achievement",
-    "fields": {
       "code": "select_city",
       "title": "Полетели",
       "description": "Выбрал город для поиска тура"
-    }
-  },
-  {
-    "model": "achievements.achievement",
-    "fields": {
-      "code": "first_favorite",
-      "title": "Скудный выбор",
-      "description": "Добавил первый тур в избранное"
-    }
-  },
-  {
-    "model": "achievements.achievement",
-    "fields": {
-      "code": "three_favorites",
-      "title": "Хороший выбор",
-      "description": "Добавил 3 тура в избранное"
     }
   },
   {
@@ -125,6 +93,14 @@
       "code": "explorer",
       "title": "Здесь должен был быть МАХ",
       "description": "Попытка зайти в телеграм"
+    }
+  },
+  {
+    "model": "achievements.achievement",
+    "fields": {
+      "code": "time_spent",
+      "title": "Залип",
+      "description": "Провёл на сайте 3 минуты"
     }
   }
 ]

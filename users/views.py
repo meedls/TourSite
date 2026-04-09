@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db import models
 from .models import User, Friendship
 from .forms import UserRegistrationForm, UserLoginForm
-
+from achievements.models import Achievement, UserAchievement
 
 def login_view(request):
     """Вход"""
@@ -50,8 +50,20 @@ def register_view(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
+
+            # 🔥 АЧИВКА new_user
+            try:
+                ach = Achievement.objects.get(code='new_user')
+                UserAchievement.objects.get_or_create(
+                    user=user,
+                    achievement=ach
+                )
+            except Achievement.DoesNotExist:
+                pass
+
             username = form.cleaned_data.get('username')
             messages.success(request, f'Аккаунт {username} успешно создан! Теперь вы можете войти.')
+
             login(request, user)
             return redirect('tours:index')
         else:
@@ -60,7 +72,6 @@ def register_view(request):
         form = UserRegistrationForm()
 
     return render(request, 'users/register.html', {'form': form})
-
 
 @login_required
 def profile_view(request):
@@ -102,11 +113,7 @@ def friends_search(request):
 
 @login_required
 def friend_add(request, user_id):
-    """Добавить в друзья"""
-    friend = get_object_or_404(User, id=user_id)
-    Friendship.objects.get_or_create(user=request.user, friend=friend)
-    return redirect('users:friends_list')
-
+    return HttpResponse(status=204)
 
 def api_users(request):
     """JSON список пользователей (поиск по username/first_name/last_name)"""

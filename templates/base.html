@@ -403,7 +403,9 @@
                 <div class="friend-detail-name" id="friend-name"></div>
                 <div class="friend-detail-username" id="friend-username"></div>
                 <div class="friend-detail-date" id="friend-date"></div>
-                <a class="friend-subscribe-btn" id="friend-subscribe" href="#" data-friend-id="">Подписаться</a>
+                <button class="friend-subscribe-btn" id="friend-subscribe" data-friend-id="">
+    Подписаться
+</button>
             </div>
         </div>
     </div>
@@ -1262,6 +1264,26 @@ document.querySelectorAll('.telegram-link').forEach(btn => {
                         sub.href = `{% url 'users:friend_add' user_id=0 %}`.replace('/0/', `/${u.id}/`);
                         friendDetailOverlay.style.display = 'flex';
                     });
+                document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('friend-subscribe-btn')) {
+        e.preventDefault();
+
+        const btn = e.target;
+        const url = btn.href;
+
+        // сначала отправляем achievement
+        fetch('/achievements/friend-added/')
+            .then(res => res.json())
+            .then(data => {
+                if (data.unlocked) {
+                    showAchievementToast(data.name, data.description);
+                }
+
+                // потом делаем переход (добавление в друзья)
+                window.location.href = url;
+            });
+    }
+});
             };
 
             const renderFriends = (users=[]) => {
@@ -1287,14 +1309,23 @@ document.querySelectorAll('.telegram-link').forEach(btn => {
                     .then(data => renderFriends(data.users || []));
             };
 
-            const openFriendsModal = () => {
-                if (!isAuth) {
-                    openAuth('login');
-                    return;
-                }
-                friendsOverlay.style.display = 'flex';
-                fetchFriends('');
-            };
+const openFriendsModal = () => {
+    if (!isAuth) {
+        openAuth('login');
+        return;
+    }
+
+    friendsOverlay.style.display = 'flex';
+    fetchFriends('');
+
+    fetch('/achievements/open-friends/')
+        .then(res => res.json())
+        .then(data => {
+            if (data.unlocked) {
+                showAchievementToast(data.name, data.description);
+            }
+        });
+};
 
             document.querySelectorAll('.open-friends-modal').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -1502,6 +1533,46 @@ document.querySelectorAll('.telegram-link').forEach(btn => {
         logoutYesBtn?.addEventListener('click', () => {
             window.location.href = "{% url 'users:logout' %}";
         });
+        let footerAchievementTriggered = false;
+
+window.addEventListener('scroll', () => {
+    if (footerAchievementTriggered) return;
+
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+
+    const rect = footer.getBoundingClientRect();
+
+    // если футер появился в зоне экрана
+    if (rect.top < window.innerHeight) {
+        footerAchievementTriggered = true;
+
+        fetch('/achievements/scroll-footer/')
+            .then(res => res.json())
+            .then(data => {
+                if (data.unlocked) {
+                    showAchievementToast(data.name, data.description);
+                }
+            });
+    }
+});
+        let timeAchievementTriggered = false;
+
+// проверяем раз в секунду
+setTimeout(() => {
+    if (timeAchievementTriggered) return;
+
+    timeAchievementTriggered = true;
+
+    fetch('/achievements/time-spent/')
+        .then(res => res.json())
+        .then(data => {
+            if (data.unlocked) {
+                showAchievementToast(data.name, data.description);
+            }
+        });
+
+}, 20000); // 3 минуты = 180000 мс
     </script>
     {% block extra_js %}{% endblock %}
 </body>
